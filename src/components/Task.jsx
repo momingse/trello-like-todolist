@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
 import ClearIcon from "@mui/icons-material/Clear";
+import { DataObject } from "@mui/icons-material";
 
 const Container = styled.div`
   border: 1px solid lightgrey;
@@ -22,6 +23,7 @@ const Container = styled.div`
   }
 
   display: flex;
+  flex-direction: column;
 `;
 
 const Handle = styled.div`
@@ -33,14 +35,38 @@ const Handle = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  margin-left: auto;
-  display: flex;
+  position: absolute;
+  align-self: end;
 `;
+
+const TaskTitle = styled.div`
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 600;
+`;
+
+const TaskDescription = styled.div`
+  font-size: 0.9rem;
+`;
+
+const TaskDeadline = styled.div`
+  font-size: 0.6rem;
+  text-align: right;
+`;
+
+const numberToDate = (dateNumber) => {
+  let date = new Date(dateNumber);
+  return date.toLocaleDateString();
+};
 
 const Task = (props) => {
   //   const [isDragDisabled, setIsDragDisabled] = React.useState(props.task.id === "task-1");
   const [isDragDisabled, setIsDragDisabled] = React.useState(false);
   const [isShown, setIsShown] = React.useState(false);
+
+  const handleDeleteTask = () => {
+    console.log("delete");
+    props.handleModifyTask(props.task.id, null, null, null, null, "delete");    
+  };
 
   return (
     <Draggable
@@ -60,13 +86,12 @@ const Task = (props) => {
           onMouseLeave={() => setIsShown(false)}
         >
           {/* <Handle {...provided.dragHandleProps}/> */}
-          {props.task.content}
+          <TaskTitle>{props.task.title}</TaskTitle>
+          <TaskDescription>{props.task.description}</TaskDescription>
+          <TaskDeadline>{numberToDate(props.task.deadline)}</TaskDeadline>
           {isShown && (
-            <ButtonContainer>
-              <ClearIcon
-                onClick={(e) => console.log("delete")}
-                sx={{ fontSize: "15px", color: "grey" }}
-              />
+            <ButtonContainer onClick={handleDeleteTask}>
+              <ClearIcon sx={{ fontSize: "15px", color: "grey" }} />
             </ButtonContainer>
           )}
         </Container>

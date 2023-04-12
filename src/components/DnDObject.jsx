@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import styled from "styled-components";
+import dayjs from "dayjs";
 import dataset from "../data/testdata";
 import Column from "./Column";
 
@@ -17,9 +18,7 @@ const DnDObject = () => {
 
     if (!storedData) return dataset;
 
-    return storedData.columnOrder
-      ? dataset
-      : JSON.parse(storedData);
+    return storedData.columnOrder ? dataset : JSON.parse(storedData);
   });
 
   const [homeIndex, setHomeIndex] = useState(null);
@@ -27,6 +26,62 @@ const DnDObject = () => {
   useEffect(() => {
     localStorage.setItem("todoData", JSON.stringify(data));
   }, [data]);
+
+  const handleModifyTask = (
+    id,
+    title,
+    description,
+    deadline,
+    columeID,
+    type
+  ) => {
+    if (type === "create") {
+      let newTask = {
+        id: `task-${Object.keys(data.tasks).length + 1}`,
+        title: title,
+        description: description,
+        deadline: deadline,
+      };
+      let newTasks = { ...data.tasks, [newTask.id]: newTask };
+      let newColumn = {
+        ...data.columns[columeID],
+        taskIds: [...data.columns[columeID].taskIds, newTask.id],
+      };
+      let newColumns = {
+        ...data.columns,
+        [columeID]: newColumn,
+      };
+      let newData = {
+        ...data,
+        tasks: newTasks,
+        columns: newColumns,
+      };
+      console.log(newData)
+      setData(newData);
+    }
+    else if (type === "delete") {
+      let newTasks = { ...data.tasks };
+      let columeID = Object.keys(data.columns).filter((key) => {
+        return data.columns[key].taskIds.includes(id);})[0];
+
+      delete newTasks[id];
+      let newColumn = {
+        ...data.columns[columeID],
+        taskIds: data.columns[columeID].taskIds.filter((task) => task !== id),
+      };
+      let newColumns = {
+        ...data.columns,
+        [columeID]: newColumn,
+      };
+      let newData = {
+        ...data,
+        tasks: newTasks,
+        columns: newColumns,
+      };
+      setData(newData);
+    }
+
+  };
 
   const handleOnDragEnd = (result) => {
     // document.body.style.color = "inherit";
@@ -129,6 +184,7 @@ const DnDObject = () => {
                 column={column}
                 tasks={tasks}
                 isDropDisabled={isDropDisabled}
+                handleModifyTask={handleModifyTask}
               />
             );
           })}

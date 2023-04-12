@@ -1,7 +1,20 @@
 import styled from "styled-components";
 import AddIcon from "@mui/icons-material/Add";
-import { Dialog, TextField, DialogTitle } from "@mui/material";
-import React from "react";
+import dayjs from "dayjs";
+import {
+  Dialog,
+  TextField,
+  Box,
+  Button,
+  DialogActions,
+  DialogContent,
+} from "@mui/material";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import React, { useState } from "react";
+import { DataObject } from "@mui/icons-material";
 
 const CreateButton = styled.div`
   padding: 8px;
@@ -26,14 +39,18 @@ const StyledIconContainer = styled.div`
   display: flex;
 `;
 
-const TitleInputFile = styled.div`
+const InputField = styled.div`
   display: flex;
   flex-direction: column;
   padding: 16px;
 `;
 
-const TaskCreator = () => {
+const TaskCreator = (props) => {
   const [isOpened, setIsOpened] = React.useState(false);
+  const [title, setTitle] = React.useState("");
+  const [deadline, setDeadline] = useState(dayjs());
+  const [desciption, setDesciption] = useState("");
+  const [error, setError] = useState(false);
 
   const handleClose = () => {
     setIsOpened(false);
@@ -43,11 +60,32 @@ const TaskCreator = () => {
     setIsOpened(true);
   };
 
+  const handleSubmit = () => {
+    if (title === "") {
+      setError(true);
+      return;
+    }
+    props.handleModifyTask(
+      0,
+      title,
+      desciption,
+      deadline.valueOf(),
+      props.columeID,
+      "create"
+    );
+    handleClose();
+    handleReset();
+  };
+
+  const handleReset = () => {
+    setTitle("");
+    setDeadline(dayjs());
+    setDesciption("");
+  };
+
   return (
     <React.Fragment>
-      <CreateButton
-        onClick={handleOnCliked}
-      >
+      <CreateButton onClick={handleOnCliked}>
         <StyledIconContainer>
           <AddIcon />
         </StyledIconContainer>
@@ -63,16 +101,52 @@ const TaskCreator = () => {
           "& .MuiPaper-root": {
             display: "flex",
             color: "#2C82C1",
-            width: "80vw",
-            height: "80vh",
+            width: "40vw",
+            height: "50vh",
             maxWidth: "644px",
-            maxHeight: "672px",
+            maxHeight: "452px",
+            minHeight: "200px",
           },
         }}
       >
-        <TitleInputFile>
-          <TextField id="standard-basic" label="Title" variant="standard" />
-        </TitleInputFile>
+        <DialogContent dividers={true}>
+          <TextField
+            error={error && title === ""}
+            id="title-input"
+            label="Title"
+            variant="standard"
+            fullWidth
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+            sx={{ marginBottom: "16px" }}
+            value={title}
+          />
+          <Box sx={{ marginBottom: "16px" }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker", "DatePicker"]}>
+                <DatePicker
+                  label="Uncontrolled picker"
+                  value={deadline}
+                  onChange={(e) => setDeadline(e.target.value)}
+                  format="MM-DD-YYYY"
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </Box>
+          <TextField
+            id="outlined-multiline-static"
+            label="Desciption"
+            fullWidth
+            multiline
+            onChange={(e) => setDesciption(e.target.value)}
+            value={desciption}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleReset}>Reset</Button>
+          <Button onClick={handleSubmit}>Submit</Button>
+        </DialogActions>
       </Dialog>
     </React.Fragment>
   );

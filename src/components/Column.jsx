@@ -29,10 +29,10 @@ const TaskList = styled.div`
     props.isdraggingover ? "lightgrey" : "inherit"};
   flex-grow: 1;
   min-height: 100px;
-  border-radius: 0 0 15px 15px;
+  // border-radius: 0 0 15px 15px;
 `;
 
-const InnerList = React.memo(({ tasks }) => {
+const InnerList = React.memo(({ tasks, handleModifyTask }) => {
   function areEqual(prevProps, nextProps) {
     if (prevProps.tasks === nextProps.tasks) {
       return true;
@@ -41,7 +41,12 @@ const InnerList = React.memo(({ tasks }) => {
   }
 
   return tasks.map((task, index) => (
-    <Task key={task.id} task={task} index={index} />
+    <Task
+      key={task.id}
+      task={task}
+      index={index}
+      handleModifyTask={handleModifyTask}
+    />
   ));
 });
 
@@ -60,12 +65,18 @@ const Column = (props) => {
             isdraggingover={snapshot.isDraggingOver}
             isStart={snapshot.draggingFromThisWith}
           >
-            <InnerList tasks={props.tasks} />
+            <InnerList
+              tasks={props.tasks}
+              handleModifyTask={props.handleModifyTask}
+            />
             {provided.placeholder}
           </TaskList>
         )}
       </Droppable>
-      <TaskCreator />
+      <TaskCreator
+        handleModifyTask={props.handleModifyTask}
+        columeID={props.column.id}
+      />
     </Container>
   );
 };

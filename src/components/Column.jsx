@@ -25,6 +25,7 @@ const TaskList = styled.div`
   background-color: ${(props) => (props.isdraggingover ? "#FFEBE6" : props.isStart ? "#E3FCEF" : "inherit")};
   flex-grow: 1;
   min-height: 100px;
+  border-radius: 0 0 15px 15px;
 `;
 
 const InnerList = React.memo(({ tasks }) => {

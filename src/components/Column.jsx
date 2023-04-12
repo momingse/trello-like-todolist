@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import styled from "styled-components";
 import { Droppable } from "react-beautiful-dnd";
+import TaskCreator from "./TaskCreator";
 import Task from "./Task";
 
 const Container = styled.div`
@@ -15,14 +16,17 @@ const Container = styled.div`
 `;
 const Title = styled.h3`
   padding: 8px 16px;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
   font-weight: 600;
   border-bottom: 1px solid lightgrey;
 `;
 const TaskList = styled.div`
   padding: 8px;
   transition: background-color 0.2s ease;
-  background-color: ${(props) => (props.isdraggingover ? "#FFEBE6" : props.isStart ? "#E3FCEF" : "inherit")};
+  // background-color: ${(props) =>
+    props.isdraggingover ? "#FFEBE6" : props.isStart ? "#E3FCEF" : "inherit"};
+  background-color: ${(props) =>
+    props.isdraggingover ? "lightgrey" : "inherit"};
   flex-grow: 1;
   min-height: 100px;
   border-radius: 0 0 15px 15px;
@@ -61,6 +65,7 @@ const Column = (props) => {
           </TaskList>
         )}
       </Droppable>
+      <TaskCreator />
     </Container>
   );
 };

@@ -64,7 +64,7 @@ const Task = (props) => {
           {isShown && (
             <ButtonContainer>
               <ClearIcon
-                onClick={e => console.log("delete")}
+                onClick={(e) => console.log("delete")}
                 sx={{ fontSize: "15px", color: "grey" }}
               />
             </ButtonContainer>

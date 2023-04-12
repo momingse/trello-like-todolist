@@ -12,7 +12,7 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-const DnDObject = () => {
+const TodoManager = () => {
   const [data, setData] = useState(() => {
     const storedData = localStorage.getItem("todoData");
 
@@ -193,4 +193,4 @@ const DnDObject = () => {
   );
 };
 
-export default DnDObject;
+export default TodoManager;

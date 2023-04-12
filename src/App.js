@@ -1,11 +1,11 @@
 import { React, useState } from "react";
-import DnDObject from "./components/DnDObject";
+import TodoManager from "./components/TodoManager";
 import "./App.css";
 
 function App() {
 
   return (
-    <DnDObject />
+    <TodoManager/>
   );
 }
 

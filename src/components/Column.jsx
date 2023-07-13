@@ -56,7 +56,7 @@ const Column = (props) => {
       <Title>{props.column.title}</Title>
       <Droppable
         droppableId={props.column.id}
-        isDropDisabled={props.isDropDisabled}
+        // isDropDisabled={props.isDropDisabled}
       >
         {(provided, snapshot) => (
           <TaskList

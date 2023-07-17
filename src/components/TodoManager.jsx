@@ -39,7 +39,7 @@ const TodoManager = () => {
     dispatch(
       moveTask({
         sourceColumnId: source.droppableId,
-        destinationColumn: destination.droppableId,
+        destinationColumnId: destination.droppableId,
         sourceIndex: source.index,
         destinationIndex: destination.index,
         taskId: draggableId,

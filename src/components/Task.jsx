@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
 import ClearIcon from "@mui/icons-material/Clear";
+import { useDispatch } from "react-redux";
+import { deleteTask } from "../redux/todoSlice";
 
 const Container = styled.div`
   border: 1px solid lightgrey;
@@ -62,9 +64,10 @@ const Task = (props) => {
   const [isDragDisabled, setIsDragDisabled] = React.useState(false);
   const [isShown, setIsShown] = React.useState(false);
 
+  const dispatch = useDispatch();
+
   const handleDeleteTask = () => {
-    console.log("delete");
-    props.handleModifyTask(props.task.id, null, null, null, null, "delete");    
+    dispatch(deleteTask(props.task.id, props.columnId));
   };
 
   return (
@@ -90,7 +93,7 @@ const Task = (props) => {
           <TaskDeadline>{numberToDate(props.task.deadline)}</TaskDeadline>
           {isShown && (
             <ButtonContainer onClick={handleDeleteTask}>
-              <ClearIcon sx={{ fontSize: "15px", color: "grey" }} />
+              <ClearIcon sx={{ fontSize: "15px", color: "grey", cursor: "pointer" }} />
             </ButtonContainer>
           )}
         </Container>

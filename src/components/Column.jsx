@@ -32,7 +32,7 @@ const TaskList = styled.div`
   // border-radius: 0 0 15px 15px;
 `;
 
-const InnerList = React.memo(({ tasks, handleModifyTask }) => {
+const InnerList = React.memo(({ tasks, columnId }) => {
   function areEqual(prevProps, nextProps) {
     if (prevProps.tasks === nextProps.tasks) {
       return true;
@@ -45,7 +45,7 @@ const InnerList = React.memo(({ tasks, handleModifyTask }) => {
       key={task.id}
       task={task}
       index={index}
-      handleModifyTask={handleModifyTask}
+      columnId={columnId}
     />
   ));
 });
@@ -67,7 +67,7 @@ const Column = (props) => {
           >
             <InnerList
               tasks={props.tasks}
-              handleModifyTask={props.handleModifyTask}
+              columnId={props.column.id}
             />
             {provided.placeholder}
           </TaskList>

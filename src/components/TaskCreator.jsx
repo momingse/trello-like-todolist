@@ -14,7 +14,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import React, { useState } from "react";
-import { DataObject } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
+import { addTask } from "../redux/todoSlice";
 
 const CreateButton = styled.div`
   padding: 8px;
@@ -52,6 +53,8 @@ const TaskCreator = (props) => {
   const [desciption, setDesciption] = useState("");
   const [error, setError] = useState(false);
 
+  const dispatch = useDispatch();
+
   const handleClose = () => {
     setIsOpened(false);
   };
@@ -65,14 +68,16 @@ const TaskCreator = (props) => {
       setError(true);
       return;
     }
-    props.handleModifyTask(
-      0,
-      title,
-      desciption,
-      deadline.valueOf(),
-      props.columeID,
-      "create"
+
+    dispatch(
+      addTask({
+        title: title,
+        description: desciption,
+        deadline: deadline.format("MM-DD-YYYY"),
+        columnId: props.columnId,
+      })
     );
+
     handleClose();
     handleReset();
   };
@@ -126,9 +131,10 @@ const TaskCreator = (props) => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker", "DatePicker"]}>
                 <DatePicker
-                  label="Uncontrolled picker"
+                  label="Deadline"
                   value={deadline}
-                  onChange={(e) => setDeadline(e.target.value)}
+                  minDate={dayjs()}
+                  onChange={(newValue) => setDeadline(newValue)} 
                   format="MM-DD-YYYY"
                 />
               </DemoContainer>

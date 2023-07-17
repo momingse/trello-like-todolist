@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
 import ClearIcon from "@mui/icons-material/Clear";
-import { DataObject } from "@mui/icons-material";
 
 const Container = styled.div`
   border: 1px solid lightgrey;

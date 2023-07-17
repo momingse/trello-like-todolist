@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import styled from "styled-components";
 import dayjs from "dayjs";
-import dataset from "../data/testdata";
+import { useSelector } from "react-redux";
 import Column from "./Column";
 
 const Container = styled.div`
@@ -13,12 +13,13 @@ const Container = styled.div`
 `;
 
 const TodoManager = () => {
+  const _data = useSelector((state) => state.todo);
   const [data, setData] = useState(() => {
     const storedData = localStorage.getItem("todoData");
 
-    if (!storedData) return dataset;
+    if (!storedData) return _data;
 
-    return storedData.columnOrder ? dataset : JSON.parse(storedData);
+    return JSON.parse(storedData);
   });
 
   const [homeIndex, setHomeIndex] = useState(null);
@@ -32,7 +33,7 @@ const TodoManager = () => {
     title,
     description,
     deadline,
-    columeID,
+    columeId,
     type
   ) => {
     if (type === "create") {
@@ -44,34 +45,34 @@ const TodoManager = () => {
       };
       let newTasks = { ...data.tasks, [newTask.id]: newTask };
       let newColumn = {
-        ...data.columns[columeID],
-        taskIds: [...data.columns[columeID].taskIds, newTask.id],
+        ...data.columns[columeId],
+        taskIds: [...data.columns[columeId].taskIds, newTask.id],
       };
       let newColumns = {
         ...data.columns,
-        [columeID]: newColumn,
+        [columeId]: newColumn,
       };
       let newData = {
         ...data,
         tasks: newTasks,
         columns: newColumns,
       };
-      console.log(newData)
+      console.log(newData);
       setData(newData);
-    }
-    else if (type === "delete") {
+    } else if (type === "delete") {
       let newTasks = { ...data.tasks };
-      let columeID = Object.keys(data.columns).filter((key) => {
-        return data.columns[key].taskIds.includes(id);})[0];
+      let columeId = Object.keys(data.columns).filter((key) => {
+        return data.columns[key].taskIds.includes(id);
+      })[0];
 
       delete newTasks[id];
       let newColumn = {
-        ...data.columns[columeID],
-        taskIds: data.columns[columeID].taskIds.filter((task) => task !== id),
+        ...data.columns[columeId],
+        taskIds: data.columns[columeId].taskIds.filter((task) => task !== id),
       };
       let newColumns = {
         ...data.columns,
-        [columeID]: newColumn,
+        [columeId]: newColumn,
       };
       let newData = {
         ...data,
@@ -80,7 +81,6 @@ const TodoManager = () => {
       };
       setData(newData);
     }
-
   };
 
   const handleOnDragEnd = (result) => {

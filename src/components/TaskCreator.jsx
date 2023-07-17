@@ -47,6 +47,7 @@ const InputField = styled.div`
 `;
 
 const TaskCreator = (props) => {
+  const { columnId } = props;
   const [isOpened, setIsOpened] = React.useState(false);
   const [title, setTitle] = React.useState("");
   const [deadline, setDeadline] = useState(dayjs());
@@ -73,8 +74,8 @@ const TaskCreator = (props) => {
       addTask({
         title: title,
         description: desciption,
-        deadline: deadline.format("MM-DD-YYYY"),
-        columnId: props.columnId,
+        deadline: deadline.valueOf(),
+        columnId: columnId,
       })
     );
 
@@ -86,6 +87,7 @@ const TaskCreator = (props) => {
     setTitle("");
     setDeadline(dayjs());
     setDesciption("");
+    setError(false);
   };
 
   return (
@@ -134,7 +136,7 @@ const TaskCreator = (props) => {
                   label="Deadline"
                   value={deadline}
                   minDate={dayjs()}
-                  onChange={(newValue) => setDeadline(newValue)} 
+                  onChange={(newValue) => setDeadline(newValue)}
                   format="MM-DD-YYYY"
                 />
               </DemoContainer>

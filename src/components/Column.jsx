@@ -1,8 +1,10 @@
 import React, { useMemo } from "react";
 import styled from "styled-components";
 import { Droppable } from "react-beautiful-dnd";
+import { useSelector } from "react-redux";
 import TaskCreator from "./TaskCreator";
 import Task from "./Task";
+import { selectColumnById } from "../redux/todoSlice";
 
 const Container = styled.div`
   margin: 8px;
@@ -32,30 +34,28 @@ const TaskList = styled.div`
   // border-radius: 0 0 15px 15px;
 `;
 
-const InnerList = React.memo(({ tasks, columnId }) => {
+const InnerList = React.memo(({ taskIds, columnId }) => {
   function areEqual(prevProps, nextProps) {
-    if (prevProps.tasks === nextProps.tasks) {
+    if (prevProps.taskIds === nextProps.taskIds) {
       return true;
     }
     return false;
   }
 
-  return tasks.map((task, index) => (
-    <Task
-      key={task.id}
-      task={task}
-      index={index}
-      columnId={columnId}
-    />
+  return taskIds.map((taskId, index) => (
+    <Task key={taskId} taskId={taskId} index={index} columnId={columnId} />
   ));
 });
 
 const Column = (props) => {
+  const { columnId } = props;
+  const column = useSelector((state) => selectColumnById(state, columnId));
+
   return (
     <Container>
-      <Title>{props.column.title}</Title>
+      <Title>{column.title}</Title>
       <Droppable
-        droppableId={props.column.id}
+        droppableId={columnId}
         // isDropDisabled={props.isDropDisabled}
       >
         {(provided, snapshot) => (
@@ -65,17 +65,12 @@ const Column = (props) => {
             isdraggingover={snapshot.isDraggingOver}
             isStart={snapshot.draggingFromThisWith}
           >
-            <InnerList
-              tasks={props.tasks}
-              columnId={props.column.id}
-            />
+            <InnerList taskIds={column.taskIds} columnId={columnId} />
             {provided.placeholder}
           </TaskList>
         )}
       </Droppable>
-      <TaskCreator
-        columnId={props.column.id}
-      />
+      <TaskCreator columnId={columnId} />
     </Container>
   );
 };

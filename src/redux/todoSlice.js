@@ -1,6 +1,7 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf, nanoid } from "@reduxjs/toolkit";
+import { createListenerMiddleware } from "@reduxjs/toolkit";
 
-const initialState = {
+const template = {
   tasks: {
     "task-1": {
       id: "task-1",
@@ -39,6 +40,8 @@ const initialState = {
   },
   columnOrder: ["column-1", "column-2", "column-3", "column-4"],
 };
+
+const initialState = JSON.parse(localStorage.getItem("todo")) || template;
 
 const todoSlice = createSlice({
   name: "todo",
@@ -155,7 +158,20 @@ const todoSlice = createSlice({
   },
 });
 
-export const { addTask, editTask, deleteTask, moveTask, setTodo } =
-  todoSlice.actions;
+export const { addTask, editTask, deleteTask, moveTask } = todoSlice.actions;
 
 export default todoSlice.reducer;
+
+export const toDoListenerMiddleware = createListenerMiddleware();
+
+toDoListenerMiddleware.startListening({
+  matcher: isAnyOf(addTask, editTask, deleteTask, moveTask),
+  effect: async (action, listenerApi) => {
+    localStorage.setItem("todo", JSON.stringify(listenerApi.getState().todo));
+  },
+});
+
+export const selectColumnOrder = (state) => state.todo.columnOrder;
+export const selectColumnById = (state, columnId) =>
+  state.todo.columns[columnId];
+export const selectTaskById = (state, taskId) => state.todo.tasks[taskId];

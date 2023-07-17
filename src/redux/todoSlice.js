@@ -45,7 +45,7 @@ const todoSlice = createSlice({
   initialState,
   reducers: {
     addTask: {
-      prepare: ({title, description, deadline, columnId}) => {
+      prepare: ({ title, description, deadline, columnId }) => {
         return {
           payload: {
             id: nanoid(),
@@ -107,34 +107,55 @@ const todoSlice = createSlice({
       },
     },
     moveTask: {
-      prepare: (taskId, sourceColumnId, destinationColumnId) => {
+      prepare: (
+        sourceColumnId,
+        destinationColumnId,
+        sourceIndex,
+        destinationIndex,
+        taskId
+      ) => {
         return {
           payload: {
-            taskId,
             sourceColumnId,
             destinationColumnId,
+            sourceIndex,
+            destinationIndex,
+            taskId,
           },
         };
       },
       reducer: (state, action) => {
-        const { taskId, sourceColumnId, destinationColumnId } = action.payload;
-        const sourceColumn = state.columns[sourceColumnId];
-        const destinationColumn = state.columns[destinationColumnId];
+        const {
+          sourceColumnId,
+          destinationColumnId,
+          sourceIndex,
+          destinationIndex,
+          taskId,
+        } = action.payload;
 
-        sourceColumn.taskIds = sourceColumn.taskIds.filter(
-          (id) => id !== taskId
-        );
-        destinationColumn.taskIds.push(taskId);
-      },
-    },
-    setTodo: {
-      reducer: (state, action) => {
-        return action.payload;
+        if (sourceColumnId === destinationColumnId) {
+          const column = state.columns[sourceColumnId];
+          const taskIds = [...column.taskIds];
+          taskIds.splice(sourceIndex, 1);
+          taskIds.splice(destinationIndex, 0, taskId);
+          column.taskIds = taskIds;
+        } else {
+          const sourceColumn = state.columns[sourceColumnId];
+          const destinationColumn = state.columns[destinationColumnId];
+          const sourceTaskIds = [...sourceColumn.taskIds];
+          sourceTaskIds.splice(sourceIndex, 1);
+          sourceColumn.taskIds = sourceTaskIds;
+
+          const destinationTaskIds = [...destinationColumn.taskIds];
+          destinationTaskIds.splice(destinationIndex, 0, taskId);
+          destinationColumn.taskIds = destinationTaskIds;
+        }
       },
     },
   },
 });
 
-export const { addTask, editTask, deleteTask, moveTask, setTodo } = todoSlice.actions;
+export const { addTask, editTask, deleteTask, moveTask, setTodo } =
+  todoSlice.actions;
 
 export default todoSlice.reducer;

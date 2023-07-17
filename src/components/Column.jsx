@@ -74,7 +74,6 @@ const Column = (props) => {
         )}
       </Droppable>
       <TaskCreator
-        handleModifyTask={props.handleModifyTask}
         columnId={props.column.id}
       />
     </Container>

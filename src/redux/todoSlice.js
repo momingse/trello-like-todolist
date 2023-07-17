@@ -72,10 +72,10 @@ const todoSlice = createSlice({
       },
     },
     editTask: {
-      prepare: (title, description, deadline) => {
+      prepare: ({ taskId, title, description, deadline }) => {
         return {
           payload: {
-            id: nanoid(),
+            taskId,
             title,
             description,
             deadline,
@@ -83,9 +83,9 @@ const todoSlice = createSlice({
         };
       },
       reducer: (state, action) => {
-        const { id, title, description, deadline } = action.payload;
-        state.tasks[id] = {
-          id,
+        const { taskId, title, description, deadline } = action.payload;
+        state.tasks[taskId] = {
+          id: taskId,
           title,
           description,
           deadline,
@@ -93,30 +93,30 @@ const todoSlice = createSlice({
       },
     },
     deleteTask: {
-      prepare: (id, columnId) => {
+      prepare: ({ taskId, columnId }) => {
         return {
           payload: {
-            id,
+            taskId,
             columnId,
           },
         };
       },
       reducer: (state, action) => {
-        const { id, columnId } = action.payload;
-        delete state.tasks[id];
+        const { taskId, columnId } = action.payload;
+        delete state.tasks[taskId];
 
         const column = state.columns[columnId];
-        column.taskIds = column.taskIds.filter((taskId) => taskId !== id);
+        column.taskIds = column.taskIds.filter((_taskId) => _taskId !== taskId);
       },
     },
     moveTask: {
-      prepare: (
+      prepare: ({
         sourceColumnId,
         destinationColumnId,
         sourceIndex,
         destinationIndex,
-        taskId
-      ) => {
+        taskId,
+      }) => {
         return {
           payload: {
             sourceColumnId,

@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import AddIcon from "@mui/icons-material/Add";
 import dayjs from "dayjs";
 import {
   Dialog,
@@ -16,6 +15,9 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTask } from "../redux/todoSlice";
+
+import AddIcon from "@mui/icons-material/Add";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const CreateButton = styled.div`
   padding: 8px;
@@ -40,24 +42,46 @@ const StyledIconContainer = styled.div`
   display: flex;
 `;
 
+const StyledDialogHeader = styled.div`
+  display: flex;
+  margin-bottom: 16px;
+  justify-content: space-between;
+`;
+
 const InputField = styled.div`
   display: flex;
   flex-direction: column;
   padding: 16px;
 `;
 
+const StyledDialog = styled(Dialog)`
+  & .MuiPaper-root {
+    display: flex;
+    color: #2c82c1;
+    width: 40vw;
+    height: 50vh;
+    max-width: 644px;
+    max-height: 452px;
+    min-height: 360px;
+    border-radius: 20px;
+  }
+`;
+
 const TaskCreator = (props) => {
   const { columnId } = props;
-  const [isOpened, setIsOpened] = React.useState(false);
-  const [title, setTitle] = React.useState("");
+  const [isOpened, setIsOpened] = useState(false);
+  const [title, setTitle] = useState("");
   const [deadline, setDeadline] = useState(dayjs());
-  const [desciption, setDesciption] = useState("");
+  const [description, setDescription] = useState("");
   const [error, setError] = useState(false);
 
   const dispatch = useDispatch();
 
   const handleClose = () => {
     setIsOpened(false);
+    setTimeout(() => {
+      handleReset();
+    }, 200);
   };
 
   const handleOnCliked = () => {
@@ -73,20 +97,19 @@ const TaskCreator = (props) => {
     dispatch(
       addTask({
         title: title,
-        description: desciption,
+        description: description,
         deadline: deadline.valueOf(),
         columnId: columnId,
       })
     );
 
     handleClose();
-    handleReset();
   };
 
   const handleReset = () => {
     setTitle("");
     setDeadline(dayjs());
-    setDesciption("");
+    setDescription("");
     setError(false);
   };
 
@@ -99,28 +122,21 @@ const TaskCreator = (props) => {
         create task
       </CreateButton>
 
-      <Dialog
+      <StyledDialog
         open={isOpened}
         onClose={handleClose}
         scroll={"paper"}
         aria-labelledby="simple-dialog-title"
-        sx={{
-          "& .MuiPaper-root": {
-            display: "flex",
-            color: "#2C82C1",
-            width: "40vw",
-            height: "50vh",
-            maxWidth: "644px",
-            maxHeight: "452px",
-            minHeight: "200px",
-          },
-        }}
       >
         <DialogContent dividers={true}>
+          <StyledDialogHeader>
+            <h2>Create Task</h2>
+            <ClearIcon onClick={handleClose} sx={{ cursor: "pointer" }} />
+          </StyledDialogHeader>
           <TextField
             error={error && title === ""}
             id="title-input"
-            label="Title"
+            label="Title*"
             variant="standard"
             fullWidth
             onChange={(e) => {
@@ -147,15 +163,15 @@ const TaskCreator = (props) => {
             label="Desciption"
             fullWidth
             multiline
-            onChange={(e) => setDesciption(e.target.value)}
-            value={desciption}
+            onChange={(e) => setDescription(e.target.value)}
+            value={description}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleReset}>Reset</Button>
           <Button onClick={handleSubmit}>Submit</Button>
         </DialogActions>
-      </Dialog>
+      </StyledDialog>
     </React.Fragment>
   );
 };

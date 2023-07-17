@@ -1,7 +1,8 @@
-import React from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
 import ClearIcon from "@mui/icons-material/Clear";
+import TaskEditor from "./TaskEditor";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTask, selectTaskById } from "../redux/todoSlice";
 
@@ -62,47 +63,61 @@ const numberToDate = (dateNumber) => {
 const Task = (props) => {
   //   const [isDragDisabled, setIsDragDisabled] = React.useState(props.task.id === "task-1");
   const { taskId, index, columnId } = props;
-  const [isDragDisabled, setIsDragDisabled] = React.useState(false);
-  const [isShown, setIsShown] = React.useState(false);
+  const [isDragDisabled, setIsDragDisabled] = useState(false);
+  const [isShown, setIsShown] = useState(false);
+  const [isOpened, setIsOpened] = useState(false);
 
   const dispatch = useDispatch();
   const task = useSelector((state) => selectTaskById(state, taskId));
 
   const handleDeleteTask = () => {
-    dispatch(deleteTask(taskId, columnId));
+    dispatch(deleteTask({ taskId, columnId }));
   };
 
+  const handleCloseTaskEditor = () => {
+    setIsOpened(false);
+  };
+  console.log(isOpened, taskId);
+
   return (
-    <Draggable
-      draggableId={taskId}
-      index={index}
-      key={taskId}
-      isDragDisabled={isDragDisabled}
-    >
-      {(provided, snapshot) => (
-        <Container
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          ref={provided.innerRef}
-          isDragging={snapshot.isDragging}
-          isDragDisabled={isDragDisabled}
-          onMouseEnter={() => setIsShown(true)}
-          onMouseLeave={() => setIsShown(false)}
-        >
-          {/* <Handle {...provided.dragHandleProps}/> */}
-          <TaskTitle>{task.title}</TaskTitle>
-          <TaskDescription>{task.description}</TaskDescription>
-          <TaskDeadline>{numberToDate(task.deadline)}</TaskDeadline>
-          {isShown && (
-            <ButtonContainer onClick={handleDeleteTask}>
-              <ClearIcon
-                sx={{ fontSize: "15px", color: "grey", cursor: "pointer" }}
-              />
-            </ButtonContainer>
-          )}
-        </Container>
-      )}
-    </Draggable>
+    <>
+      <TaskEditor
+        task={task}
+        isOpened={isOpened}
+        handleCloseTaskEditor={handleCloseTaskEditor}
+      />
+      <Draggable
+        draggableId={taskId}
+        index={index}
+        key={taskId}
+        isDragDisabled={isDragDisabled}
+      >
+        {(provided, snapshot) => (
+          <Container
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+            isDragging={snapshot.isDragging}
+            isDragDisabled={isDragDisabled}
+            onMouseEnter={() => setIsShown(true)}
+            onMouseLeave={() => setIsShown(false)}
+            onClick={() => setIsOpened(true)}
+          >
+            {/* <Handle {...provided.dragHandleProps}/> */}
+            <TaskTitle>{task.title}</TaskTitle>
+            <TaskDescription>{task.description}</TaskDescription>
+            <TaskDeadline>{numberToDate(task.deadline)}</TaskDeadline>
+            {isShown && (
+              <ButtonContainer onClick={handleDeleteTask}>
+                <ClearIcon
+                  sx={{ fontSize: "15px", color: "grey", cursor: "pointer" }}
+                />
+              </ButtonContainer>
+            )}
+          </Container>
+        )}
+      </Draggable>
+    </>
   );
 };
 

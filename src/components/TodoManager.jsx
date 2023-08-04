@@ -1,27 +1,83 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import styled from "styled-components";
-import dayjs from "dayjs";
+import styled, { css } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { moveTask, selectColumnOrder } from "../redux/todoSlice";
 import Column from "./Column";
+import ColumnNavigator from "./ColumnNavigator";
+import useWindowSize from "../Hooks/useWindowSize";
+import theme from "../theme/theme";
 
-const Container = styled.div`
-  margin-top: 30px;
-  height: 70vh;
+const AppContainer = styled.div`
   display: flex;
-  justify-content: center;
+  height: 100vh;
+  align-items: center;
+`;
+
+const ColumnsContainer = styled.div`
+  ${({ theme }) => css`
+    @media (max-width: ${theme.breakpoints.values.md}px) {
+      white-space: nowrap;
+    }
+  `}
+
+  margin: auto;
+  height: 80%;
+  min-height: 400px;
+`;
+
+const NavigatorContainer = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
 `;
 
 const TodoManager = () => {
   const [homeIndex, setHomeIndex] = useState(null);
+  const [currentColume, setCurrentColume] = useState(0);
+  const [windowWidth, windowHeight] = useWindowSize();
 
   const dispatch = useDispatch();
   const columnOrder = useSelector(selectColumnOrder);
 
+  useEffect(() => {
+    if (windowWidth > theme.breakpoints.values.md) return;
+    autoScroll({ instant: true });
+  }, [windowWidth]);
+
+  const autoScroll = ({ instant }) => {
+    const currentPosition = document.documentElement.scrollLeft;
+    const childWidth = document.documentElement.clientWidth;
+    const adjustScroll = currentPosition % childWidth;
+
+    if (adjustScroll > childWidth / 2) {
+      if (instant) {
+        document.documentElement.scrollLeft += childWidth - adjustScroll;
+        return;
+      }
+      document.documentElement.scrollTo({
+        left: document.documentElement.scrollLeft + childWidth - adjustScroll,
+        behavior: "smooth",
+      });
+    } else {
+      if (instant) {
+        document.documentElement.scrollLeft -= adjustScroll;
+        return;
+      }
+      document.documentElement.scrollTo({
+        left: document.documentElement.scrollLeft - adjustScroll,
+        behavior: "smooth",
+      });
+    }
+
+    setCurrentColume(Math.floor(currentPosition / childWidth));
+  };
+
   const handleOnDragEnd = (result) => {
     // document.body.style.color = "inherit";
     // document.body.style.backgroundColor = "inherit";
+    setTimeout(() => autoScroll({ instant: false }), 2000);
 
     const { destination, source, draggableId } = result;
 
@@ -48,43 +104,47 @@ const TodoManager = () => {
   };
 
   const handleOnDragStart = (start) => {
-    // document.body.style.color = "orange";
-    // document.body.style.transition = "background-color 0.2s ease";
-
     setHomeIndex(columnOrder.indexOf(start.source.droppableId));
   };
 
-  const handleOnDragUpdate = (update) => {
-    // const { destination } = update;
-    // const opacity = destination
-    //   ? destination.index / Object.keys(data.tasks).length
-    //   : 0;
-    // document.body.style.backgroundColor = `rgba(153, 141, 217, ${opacity})`;
-  };
+  const handleOnDragUpdate = (update) => {};
 
-  const Columns = () => {
-    return columnOrder?.map((columnId, index) => {
-      const isDropDisabled = index ? index < homeIndex : true;
-      return (
-        <Column
-          key={columnId}
-          isDropDisabled={isDropDisabled}
-          columnId={columnId}
-        />
-      );
-    });
+  const handleChangeColumn = (index) => {
+    setCurrentColume(index);
   };
 
   return (
-    <DragDropContext
-      onDragEnd={handleOnDragEnd}
-      onDragStart={handleOnDragStart}
-      onDragUpdate={handleOnDragUpdate}
-    >
-      <Container>
-        <Columns />
-      </Container>
-    </DragDropContext>
+    <AppContainer>
+      <DragDropContext
+        onDragEnd={handleOnDragEnd}
+        onDragStart={handleOnDragStart}
+        onDragUpdate={handleOnDragUpdate}
+      >
+        <ColumnsContainer>
+          {columnOrder?.map((columnId, index) => {
+            const isDropDisabled = index ? index < homeIndex : true;
+            return (
+              <Column
+                key={columnId}
+                isDropDisabled={isDropDisabled}
+                columnId={columnId}
+                hidden={currentColume !== index}
+                isFirstColumn={index === 0}
+                isLastColumn={index === columnOrder.length - 1}
+              />
+            );
+          })}
+        </ColumnsContainer>
+        <NavigatorContainer>
+          <ColumnNavigator
+            columnOrder={columnOrder}
+            currentColume={currentColume}
+            handleChangeColumn={handleChangeColumn}
+            el={document.documentElement}
+          />
+        </NavigatorContainer>
+      </DragDropContext>
+    </AppContainer>
   );
 };
 

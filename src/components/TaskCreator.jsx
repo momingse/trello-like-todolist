@@ -46,6 +46,7 @@ const StyledDialogHeader = styled.div`
   display: flex;
   margin-bottom: 16px;
   justify-content: space-between;
+  color: #1c1c1c;
 `;
 
 const InputField = styled.div`
@@ -64,6 +65,12 @@ const StyledDialog = styled(Dialog)`
     max-height: 452px;
     min-height: 360px;
     border-radius: 20px;
+  }
+`;
+
+const StyledDialogActions = styled(DialogActions)`
+  button {
+    color: #1c1c1c;
   }
 `;
 
@@ -167,10 +174,10 @@ const TaskCreator = (props) => {
             value={description}
           />
         </DialogContent>
-        <DialogActions>
+        <StyledDialogActions>
           <Button onClick={handleReset}>Reset</Button>
           <Button onClick={handleSubmit}>Submit</Button>
-        </DialogActions>
+        </StyledDialogActions>
       </StyledDialog>
     </React.Fragment>
   );

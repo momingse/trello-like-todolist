@@ -2,15 +2,26 @@ import { useState } from "react";
 import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
 import ClearIcon from "@mui/icons-material/Clear";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import TaskEditor from "./TaskEditor";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTask, selectTaskById } from "../redux/todoSlice";
+import {
+  deleteTask,
+  selectTaskById,
+  moveTaskBackward,
+  moveTaskForward,
+} from "../redux/todoSlice";
 
-const Container = styled.div`
-  border: 1px solid lightgrey;
+const TaskContainer = styled.div`
+  display: flex;
+  position: relative;
+  flex-direction: column;
   padding: 8px;
   margin-bottom: 8px;
+  border: 1px solid lightgrey;
   border-radius: 10px;
+
   background-color: ${(props) => {
     if (props.isDragDisabled) {
       return "lightgrey";
@@ -23,9 +34,6 @@ const Container = styled.div`
   &:hover {
     background-color: #f5f5f5;
   }
-
-  display: flex;
-  flex-direction: column;
 `;
 
 const Handle = styled.div`
@@ -38,7 +46,23 @@ const Handle = styled.div`
 
 const ButtonContainer = styled.div`
   position: absolute;
-  align-self: end;
+  top: 4px;
+  right: 4px;
+  z-index: 1;
+
+  svg {
+    font-size: 20px;
+    color: grey;
+    cursor: pointer;
+  }
+
+  & > svg:first-child {
+    visibility: ${(props) => (props.isFirstColumn ? "hidden" : "visible")};
+  }
+
+  & > svg:nth-child(2) {
+    visibility: ${(props) => (props.isLastColumn ? "hidden" : "visible")};
+  }
 `;
 
 const TaskTitle = styled.div`
@@ -62,7 +86,7 @@ const numberToDate = (dateNumber) => {
 
 const Task = (props) => {
   //   const [isDragDisabled, setIsDragDisabled] = React.useState(props.task.id === "task-1");
-  const { taskId, index, columnId } = props;
+  const { taskId, index, columnId, isFirstColumn, isLastColumn } = props;
   const [isDragDisabled, setIsDragDisabled] = useState(false);
   const [isShown, setIsShown] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
@@ -77,7 +101,18 @@ const Task = (props) => {
   const handleCloseTaskEditor = () => {
     setIsOpened(false);
   };
-  console.log(isOpened, taskId);
+
+  const handleMoveTaskBackward = () => {
+    dispatch(
+      moveTaskBackward({ taskId, sourceIndex: index, sourceColumnId: columnId })
+    );
+  };
+
+  const handleMoveTaskForward = () => {
+    dispatch(
+      moveTaskForward({ taskId, sourceIndex: index, sourceColumnId: columnId })
+    );
+  };
 
   return (
     <>
@@ -93,7 +128,7 @@ const Task = (props) => {
         isDragDisabled={isDragDisabled}
       >
         {(provided, snapshot) => (
-          <Container
+          <TaskContainer
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
@@ -107,14 +142,19 @@ const Task = (props) => {
             <TaskTitle>{task.title}</TaskTitle>
             <TaskDescription>{task.description}</TaskDescription>
             <TaskDeadline>{numberToDate(task.deadline)}</TaskDeadline>
-            {isShown && (
-              <ButtonContainer onClick={handleDeleteTask}>
-                <ClearIcon
-                  sx={{ fontSize: "15px", color: "grey", cursor: "pointer" }}
-                />
+            {/* {isShown && (
+              <ButtonContainer>
+                <KeyboardArrowLeftIcon onClick={handleMoveTaskBackward} />
+                <KeyboardArrowRightIcon onClick={handleMoveTaskForward} />
+                <ClearIcon onClick={handleDeleteTask} />
               </ButtonContainer>
-            )}
-          </Container>
+            )} */}
+            <ButtonContainer isFirstColumn={isFirstColumn} isLastColumn={isLastColumn} >
+              <KeyboardArrowLeftIcon onClick={handleMoveTaskBackward} />
+              <KeyboardArrowRightIcon onClick={handleMoveTaskForward} />
+              <ClearIcon onClick={handleDeleteTask} />
+            </ButtonContainer>
+          </TaskContainer>
         )}
       </Draggable>
     </>

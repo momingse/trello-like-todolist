@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import styled from "styled-components";
+import React from "react";
+import styled, { css } from "styled-components";
 import { Droppable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import TaskCreator from "./TaskCreator";
@@ -11,10 +11,19 @@ const Container = styled.div`
   border: 1px solid lightgrey;
   border-radius: 15px;
   width: 20vw;
+  height: 90%;
   background-color: white;
 
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
+
+  ${({ theme }) => css`
+    @media (max-width: ${theme.breakpoints.values.md}px) {
+      width: 80vw;
+      margin: 0 10vw;
+    }
+    
+  `}
 `;
 const Title = styled.h3`
   padding: 8px 16px;
@@ -23,6 +32,7 @@ const Title = styled.h3`
   border-bottom: 1px solid lightgrey;
 `;
 const TaskList = styled.div`
+  width: calc(100% - 16px);
   padding: 8px;
   transition: background-color 0.2s ease;
   // background-color: ${(props) =>
@@ -31,24 +41,58 @@ const TaskList = styled.div`
     props.isdraggingover ? "lightgrey" : "inherit"};
   flex-grow: 1;
   min-height: 100px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable both-edges;
   // border-radius: 0 0 15px 15px;
-`;
 
-const InnerList = React.memo(({ taskIds, columnId }) => {
-  function areEqual(prevProps, nextProps) {
-    if (prevProps.taskIds === nextProps.taskIds) {
-      return true;
-    }
-    return false;
+  ::-webkit-scrollbar {
+    width: 4px;
   }
 
-  return taskIds.map((taskId, index) => (
-    <Task key={taskId} taskId={taskId} index={index} columnId={columnId} />
-  ));
-});
+  ::-webkit-scrollbar-track {
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background: rgba(0, 0, 0, 0.5);
+  }
+`;
+
+const InnerList = React.memo(
+  ({ taskIds, columnId, isFirstColumn, isLastColumn }) => {
+    function areEqual(prevProps, nextProps) {
+      if (prevProps.taskIds === nextProps.taskIds) {
+        return true;
+      }
+      return false;
+    }
+
+    return taskIds.map((taskId, index) => (
+      <Task
+        key={taskId}
+        taskId={taskId}
+        index={index}
+        columnId={columnId}
+        isFirstColumn={isFirstColumn}
+        isLastColumn={isLastColumn}
+      />
+    ));
+  }
+);
 
 const Column = (props) => {
-  const { columnId } = props;
+  const { columnId, isFirstColumn, isLastColumn } = props;
   const column = useSelector((state) => selectColumnById(state, columnId));
 
   return (
@@ -65,7 +109,12 @@ const Column = (props) => {
             isdraggingover={snapshot.isDraggingOver}
             isStart={snapshot.draggingFromThisWith}
           >
-            <InnerList taskIds={column.taskIds} columnId={columnId} />
+            <InnerList
+              taskIds={column.taskIds}
+              columnId={columnId}
+              isFirstColumn={isFirstColumn}
+              isLastColumn={isLastColumn}
+            />
             {provided.placeholder}
           </TaskList>
         )}

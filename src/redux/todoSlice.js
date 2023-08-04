@@ -32,7 +32,7 @@ const template = {
     "column-1": { id: "column-1", title: "Todo", taskIds: ["task-1"] },
     "column-2": {
       id: "column-2",
-      title: "In progress",
+      title: "In Progress",
       taskIds: ["task-2", "task-3"],
     },
     "column-3": { id: "column-3", title: "Review", taskIds: [] },
@@ -155,10 +155,67 @@ const todoSlice = createSlice({
         }
       },
     },
+    moveTaskForward: {
+      prepare: ({ sourceColumnId, sourceIndex, taskId }) => {
+        return {
+          payload: {
+            sourceColumnId,
+            sourceIndex,
+            taskId,
+          },
+        };
+      },
+      reducer: (state, action) => {
+        const { sourceColumnId, sourceIndex, taskId } = action.payload;
+        if (
+          state.columnOrder.indexOf(sourceColumnId) ===
+          state.columnOrder.length - 1
+        )
+          return;
+
+        const nextColumnId =
+          state.columnOrder[state.columnOrder.indexOf(sourceColumnId) + 1];
+        const sourceTaskIds = [...state.columns[sourceColumnId].taskIds];
+        sourceTaskIds.splice(sourceIndex, 1);
+        state.columns[sourceColumnId].taskIds = sourceTaskIds;
+
+        const nextColumnTaskIds = [...state.columns[nextColumnId].taskIds];
+        nextColumnTaskIds.push(taskId);
+        state.columns[nextColumnId].taskIds = nextColumnTaskIds;
+      },
+    },
+    moveTaskBackward: {
+      prepare: ({ sourceColumnId, sourceIndex, taskId }) => {
+        return {
+          payload: {
+            sourceColumnId,
+            sourceIndex,
+            taskId,
+          },
+        };
+      },
+      reducer: (state, action) => {
+        const { sourceColumnId, sourceIndex, taskId } = action.payload;
+        if (state.columnOrder.indexOf(sourceColumnId) === 0) return;
+
+        const previousColumnId =
+          state.columnOrder[state.columnOrder.indexOf(sourceColumnId) - 1];
+        const sourceTaskIds = [...state.columns[sourceColumnId].taskIds];
+        sourceTaskIds.splice(sourceIndex, 1);
+        state.columns[sourceColumnId].taskIds = sourceTaskIds;
+
+        const previousColumnTaskIds = [
+          ...state.columns[previousColumnId].taskIds,
+        ];
+        previousColumnTaskIds.push(taskId);
+        state.columns[previousColumnId].taskIds = previousColumnTaskIds;
+      },
+    },
   },
 });
 
-export const { addTask, editTask, deleteTask, moveTask } = todoSlice.actions;
+export const { addTask, editTask, deleteTask, moveTask, moveTaskForward, moveTaskBackward } =
+  todoSlice.actions;
 
 export default todoSlice.reducer;
 

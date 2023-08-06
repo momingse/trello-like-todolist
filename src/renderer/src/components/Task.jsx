@@ -1,17 +1,12 @@
-import { useState } from "react";
-import styled from "styled-components";
-import { Draggable } from "react-beautiful-dnd";
-import ClearIcon from "@mui/icons-material/Clear";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import TaskEditor from "./TaskEditor";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteTask,
-  selectTaskById,
-  moveTaskBackward,
-  moveTaskForward,
-} from "../redux/todoSlice";
+import { useState } from 'react'
+import styled from 'styled-components'
+import { Draggable } from 'react-beautiful-dnd'
+import ClearIcon from '@mui/icons-material/Clear'
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
+import TaskEditor from './TaskEditor'
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteTask, selectTaskById, moveTaskBackward, moveTaskForward } from '../redux/todoSlice'
 
 const TaskContainer = styled.div`
   display: flex;
@@ -29,12 +24,12 @@ const TaskContainer = styled.div`
     if (props.isDragging) {
       // return "#F5F5F5";
     }
-    return props.theme.colors.primaryBackground;
+    return props.theme.colors.primaryBackground
   }};
   &:hover {
     ${(props) => props.theme.colors.secondaryBackground}
   }
-`;
+`
 
 const Handle = styled.div`
   width: 20px;
@@ -42,7 +37,7 @@ const Handle = styled.div`
   background-color: orange;
   border-radius: 4px;
   margin-right: 8px;
-`;
+`
 
 const ButtonContainer = styled.div`
   position: absolute;
@@ -57,84 +52,68 @@ const ButtonContainer = styled.div`
 
   & > svg:first-child {
     color: ${(props) =>
-      props.isFirstColumn
-        ? props.theme.colors.disabledFont
-        : props.theme.colors.font};
+      props.isFirstColumn ? props.theme.colors.disabledFont : props.theme.colors.font};
 
-    cursor: ${(props) => (props.isFirstColumn ? "auto" : "pointer")};
+    cursor: ${(props) => (props.isFirstColumn ? 'auto' : 'pointer')};
   }
 
   & > svg:nth-child(2) {
     color: ${(props) =>
-      props.isLastColumn
-        ? props.theme.colors.disabledFont
-        : props.theme.colors.font};
-    cursor: ${(props) => (props.isLastColumn ? "auto" : "pointer")};
+      props.isLastColumn ? props.theme.colors.disabledFont : props.theme.colors.font};
+    cursor: ${(props) => (props.isLastColumn ? 'auto' : 'pointer')};
   }
-`;
+`
 
 const TaskTitle = styled.div`
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   font-weight: 600;
-`;
+`
 
 const TaskDescription = styled.div`
   font-size: 0.9rem;
-`;
+  white-space: pre-wrap;
+`
 
 const TaskDeadline = styled.div`
   font-size: 0.6rem;
   text-align: right;
-`;
+`
 
 const numberToDate = (dateNumber) => {
-  let date = new Date(dateNumber);
-  return date.toLocaleDateString();
-};
+  let date = new Date(dateNumber)
+  return date.toLocaleDateString()
+}
 
 const Task = (props) => {
   //   const [isDragDisabled, setIsDragDisabled] = React.useState(props.task.id === "task-1");
-  const { taskId, index, columnId, isFirstColumn, isLastColumn } = props;
-  const [isDragDisabled, setIsDragDisabled] = useState(false);
-  const [isShown, setIsShown] = useState(false);
-  const [isOpened, setIsOpened] = useState(false);
+  const { taskId, index, columnId, isFirstColumn, isLastColumn } = props
+  const [isDragDisabled, setIsDragDisabled] = useState(false)
+  const [isShown, setIsShown] = useState(false)
+  const [isOpened, setIsOpened] = useState(false)
 
-  const dispatch = useDispatch();
-  const task = useSelector((state) => selectTaskById(state, taskId));
+  const dispatch = useDispatch()
+  const task = useSelector((state) => selectTaskById(state, taskId))
 
   const handleDeleteTask = () => {
-    dispatch(deleteTask({ taskId, columnId }));
-  };
+    dispatch(deleteTask({ taskId, columnId }))
+  }
 
   const handleCloseTaskEditor = () => {
-    setIsOpened(false);
-  };
+    setIsOpened(false)
+  }
 
   const handleMoveTaskBackward = () => {
-    dispatch(
-      moveTaskBackward({ taskId, sourceIndex: index, sourceColumnId: columnId })
-    );
-  };
+    dispatch(moveTaskBackward({ taskId, sourceIndex: index, sourceColumnId: columnId }))
+  }
 
   const handleMoveTaskForward = () => {
-    dispatch(
-      moveTaskForward({ taskId, sourceIndex: index, sourceColumnId: columnId })
-    );
-  };
+    dispatch(moveTaskForward({ taskId, sourceIndex: index, sourceColumnId: columnId }))
+  }
 
   return (
     <>
-      <TaskEditor
-        task={task}
-        isOpened={isOpened}
-        handleCloseTaskEditor={handleCloseTaskEditor}
-      />
-      <Draggable
-        draggableId={taskId}
-        index={index}
-        key={taskId}
-        isDragDisabled={isDragDisabled}
-      >
+      <TaskEditor task={task} isOpened={isOpened} handleCloseTaskEditor={handleCloseTaskEditor} />
+      <Draggable draggableId={taskId} index={index} key={taskId} isDragDisabled={isDragDisabled}>
         {(provided, snapshot) => (
           <TaskContainer
             {...provided.draggableProps}
@@ -151,10 +130,7 @@ const Task = (props) => {
             <TaskDescription>{task.description}</TaskDescription>
             <TaskDeadline>{numberToDate(task.deadline)}</TaskDeadline>
             {isShown && (
-              <ButtonContainer
-                isFirstColumn={isFirstColumn}
-                isLastColumn={isLastColumn}
-              >
+              <ButtonContainer isFirstColumn={isFirstColumn} isLastColumn={isLastColumn}>
                 <KeyboardArrowLeftIcon onClick={handleMoveTaskBackward} />
                 <KeyboardArrowRightIcon onClick={handleMoveTaskForward} />
                 <ClearIcon onClick={handleDeleteTask} />
@@ -164,7 +140,7 @@ const Task = (props) => {
         )}
       </Draggable>
     </>
-  );
-};
+  )
+}
 
-export default Task;
+export default Task

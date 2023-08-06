@@ -43,7 +43,7 @@ const TaskList = styled.div`
   min-height: 100px;
   overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-gutter: stable both-edges;
+  // scrollbar-gutter: stable both-edges;
   // border-radius: 0 0 15px 15px;
 
   ::-webkit-scrollbar {

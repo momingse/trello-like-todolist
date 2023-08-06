@@ -1,25 +1,17 @@
-import styled, { css, withTheme } from "styled-components";
-import dayjs from "dayjs";
-import {
-  Dialog,
-  Input,
-  Box,
-  Button,
-  DialogActions,
-  DialogContent,
-  TextField,
-} from "@mui/material";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { pickersLayoutClasses } from "@mui/x-date-pickers/PickersLayout";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addTask } from "../redux/todoSlice";
+import styled, { css, withTheme } from 'styled-components'
+import dayjs from 'dayjs'
+import { Dialog, Input, Box, Button, DialogActions, DialogContent, TextField } from '@mui/material'
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { addTask } from '../redux/todoSlice'
 
-import AddIcon from "@mui/icons-material/Add";
-import ClearIcon from "@mui/icons-material/Clear";
+import AddIcon from '@mui/icons-material/Add'
+import ClearIcon from '@mui/icons-material/Clear'
 
 const CreateButton = styled.div`
   padding: 8px;
@@ -38,18 +30,18 @@ const CreateButton = styled.div`
       box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
     }
   `}
-`;
+`
 
 const StyledIconContainer = styled.div`
   padding-right: 10px;
   display: flex;
-`;
+`
 
 const StyledDialogHeader = styled.div`
   display: flex;
   margin-bottom: 16px;
   justify-content: space-between;
-`;
+`
 
 const StyledDialog = styled(Dialog)`
   & .MuiPaper-root {
@@ -69,7 +61,7 @@ const StyledDialog = styled(Dialog)`
       color: ${theme.colors.font};
     }
   `}
-`;
+`
 
 const StyledInput = styled(Input)`
   ${({ theme }) => css`
@@ -85,7 +77,7 @@ const StyledInput = styled(Input)`
       border: 1px solid ${theme.colors.borderActive} !important;
     }
   `}
-`;
+`
 
 const StyledTextField = styled(TextField)`
   ${({ theme }) => css`
@@ -101,10 +93,11 @@ const StyledTextField = styled(TextField)`
       border: 1px solid ${theme.colors.borderActive} !important;
     }
   `}
-`;
+`
 
 const StyledDatePicker = styled(DatePicker)`
   width: calc(100% - 2px);
+  padding: 0;
 
   ${({ theme }) => css`
     border: 1px solid ${theme.colors.border} !important;
@@ -120,7 +113,7 @@ const StyledDatePicker = styled(DatePicker)`
       border: 1px solid ${theme.colors.borderActive} !important;
     }
   `}
-`;
+`
 
 const StyledDialogActions = styled(DialogActions)`
   ${({ theme }) => css`
@@ -128,33 +121,33 @@ const StyledDialogActions = styled(DialogActions)`
       color: ${theme.colors.font};
     }
   `}
-`;
+`
 
 const TaskCreator = (props) => {
-  const { columnId, theme } = props;
-  const [isOpened, setIsOpened] = useState(false);
-  const [title, setTitle] = useState("");
-  const [deadline, setDeadline] = useState(dayjs());
-  const [description, setDescription] = useState("");
-  const [error, setError] = useState(false);
+  const { columnId, theme } = props
+  const [isOpened, setIsOpened] = useState(false)
+  const [title, setTitle] = useState('')
+  const [deadline, setDeadline] = useState(dayjs())
+  const [description, setDescription] = useState('')
+  const [error, setError] = useState(false)
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const handleClose = () => {
-    setIsOpened(false);
+    setIsOpened(false)
     setTimeout(() => {
-      handleReset();
-    }, 200);
-  };
+      handleReset()
+    }, 200)
+  }
 
   const handleOnCliked = () => {
-    setIsOpened(true);
-  };
+    setIsOpened(true)
+  }
 
   const handleSubmit = () => {
-    if (title === "") {
-      setError(true);
-      return;
+    if (title === '') {
+      setError(true)
+      return
     }
 
     dispatch(
@@ -162,19 +155,19 @@ const TaskCreator = (props) => {
         title: title,
         description: description,
         deadline: deadline.valueOf(),
-        columnId: columnId,
+        columnId: columnId
       })
-    );
+    )
 
-    handleClose();
-  };
+    handleClose()
+  }
 
   const handleReset = () => {
-    setTitle("");
-    setDeadline(dayjs());
-    setDescription("");
-    setError(false);
-  };
+    setTitle('')
+    setDeadline(dayjs())
+    setDescription('')
+    setError(false)
+  }
 
   const DatePickerLayoutSX = {
     backgroundColor: theme.colors.primaryBackground,
@@ -182,13 +175,13 @@ const TaskCreator = (props) => {
 
     [`.MuiButtonBase-root, .MuiDayCalendar-weekContainer, .MuiDayCalendar-weekContainer, .MuiTypography-root`]:
       {
-        color: theme.colors.font,
+        color: theme.colors.font
       },
-    
+
     [`.Mui-disabled, .Mui-disabled:not(.Mui-selected)`]: {
-      color: theme.colors.disabledFont,
+      color: theme.colors.disabledFont
     }
-  };
+  }
 
   return (
     <React.Fragment>
@@ -202,32 +195,32 @@ const TaskCreator = (props) => {
       <StyledDialog
         open={isOpened}
         onClose={handleClose}
-        scroll={"paper"}
+        scroll={'paper'}
         aria-labelledby="simple-dialog-title"
       >
         <DialogContent dividers={true}>
           <StyledDialogHeader>
             <h2>Create Task</h2>
-            <ClearIcon onClick={handleClose} sx={{ cursor: "pointer" }} />
+            <ClearIcon onClick={handleClose} sx={{ cursor: 'pointer' }} />
           </StyledDialogHeader>
           <span>Title</span>
           <StyledInput
-            error={error && title === ""}
+            error={error && title === ''}
             id="title-input"
             label=""
             variant="standard"
             fullWidth
             onChange={(e) => {
-              setTitle(e.target.value);
+              setTitle(e.target.value)
             }}
-            sx={{ marginBottom: "16px" }}
+            sx={{ marginBottom: '16px' }}
             value={title}
             disableUnderline={true}
           />
-          <Box sx={{ marginBottom: "16px" }}>
+          <Box sx={{ marginBottom: '16px' }}>
             <span>Deadline</span>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={["DatePicker", "DatePicker"]}>
+              <DemoContainer components={['DatePicker', 'DatePicker']}>
                 <StyledDatePicker
                   label=""
                   variant="standard"
@@ -237,8 +230,8 @@ const TaskCreator = (props) => {
                   format="MM-DD-YYYY"
                   slotProps={{
                     layout: {
-                      sx: DatePickerLayoutSX,
-                    },
+                      sx: DatePickerLayoutSX
+                    }
                   }}
                 />
               </DemoContainer>
@@ -253,11 +246,11 @@ const TaskCreator = (props) => {
             onChange={(e) => setDescription(e.target.value)}
             value={description}
             InputLabelProps={{
-              disabled: true,
+              disabled: true
             }}
             variant="standard"
             InputProps={{
-              disableUnderline: true,
+              disableUnderline: true
             }}
           />
         </DialogContent>
@@ -267,7 +260,7 @@ const TaskCreator = (props) => {
         </StyledDialogActions>
       </StyledDialog>
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default withTheme(TaskCreator);
+export default withTheme(TaskCreator)

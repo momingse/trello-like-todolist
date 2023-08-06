@@ -9,10 +9,15 @@ const theme = {
     },
   },
   colors: {
-    primary: "#DCD6F7",
-    secondary: "#424874",
-    word: "#CACFD6"
-  }
+    primary: "#66FCF1",
+    secondary: "#45A29E",
+    font: "#C5C6C7",
+    disabledFont: "#5B5B5B",
+    primaryBackground: "#0B0C10",
+    secondaryBackground: "#1F2833",
+    border: "#45A29E",
+    borderActive: "#66FCF1"
+  },
 };
 
 export default theme;

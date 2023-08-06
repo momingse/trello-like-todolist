@@ -12,18 +12,25 @@ const AppContainer = styled.div`
   display: flex;
   height: 100vh;
   align-items: center;
+
+  ${({ theme }) => css`
+    color: ${theme.colors.font};
+  `}
 `;
 
 const ColumnsContainer = styled.div`
+  padding: 10% 0;
+  width: 100%;
+  height: 80%;
+  min-height: 400px;
+
   ${({ theme }) => css`
     @media (max-width: ${theme.breakpoints.values.md}px) {
       white-space: nowrap;
+      width: auto;
     }
+    background-color: ${theme.colors.primaryBackground};
   `}
-
-  margin: auto;
-  height: 80%;
-  min-height: 400px;
 `;
 
 const NavigatorContainer = styled.div`

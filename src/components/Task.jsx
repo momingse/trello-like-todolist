@@ -24,15 +24,15 @@ const TaskContainer = styled.div`
 
   background-color: ${(props) => {
     if (props.isDragDisabled) {
-      return "lightgrey";
+      // return "lightgrey";
     }
     if (props.isDragging) {
-      return "#F5F5F5";
+      // return "#F5F5F5";
     }
-    return "white";
+    return props.theme.colors.primaryBackground;
   }};
   &:hover {
-    background-color: #f5f5f5;
+    ${(props) => props.theme.colors.secondaryBackground}
   }
 `;
 
@@ -52,16 +52,24 @@ const ButtonContainer = styled.div`
 
   svg {
     font-size: 20px;
-    color: grey;
     cursor: pointer;
   }
 
   & > svg:first-child {
-    visibility: ${(props) => (props.isFirstColumn ? "hidden" : "visible")};
+    color: ${(props) =>
+      props.isFirstColumn
+        ? props.theme.colors.disabledFont
+        : props.theme.colors.font};
+
+    cursor: ${(props) => (props.isFirstColumn ? "auto" : "pointer")};
   }
 
   & > svg:nth-child(2) {
-    visibility: ${(props) => (props.isLastColumn ? "hidden" : "visible")};
+    color: ${(props) =>
+      props.isLastColumn
+        ? props.theme.colors.disabledFont
+        : props.theme.colors.font};
+    cursor: ${(props) => (props.isLastColumn ? "auto" : "pointer")};
   }
 `;
 
@@ -142,18 +150,16 @@ const Task = (props) => {
             <TaskTitle>{task.title}</TaskTitle>
             <TaskDescription>{task.description}</TaskDescription>
             <TaskDeadline>{numberToDate(task.deadline)}</TaskDeadline>
-            {/* {isShown && (
-              <ButtonContainer>
+            {isShown && (
+              <ButtonContainer
+                isFirstColumn={isFirstColumn}
+                isLastColumn={isLastColumn}
+              >
                 <KeyboardArrowLeftIcon onClick={handleMoveTaskBackward} />
                 <KeyboardArrowRightIcon onClick={handleMoveTaskForward} />
                 <ClearIcon onClick={handleDeleteTask} />
               </ButtonContainer>
-            )} */}
-            <ButtonContainer isFirstColumn={isFirstColumn} isLastColumn={isLastColumn} >
-              <KeyboardArrowLeftIcon onClick={handleMoveTaskBackward} />
-              <KeyboardArrowRightIcon onClick={handleMoveTaskForward} />
-              <ClearIcon onClick={handleDeleteTask} />
-            </ButtonContainer>
+            )}
           </TaskContainer>
         )}
       </Draggable>

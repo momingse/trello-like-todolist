@@ -8,11 +8,9 @@ import { selectColumnById } from "../redux/todoSlice";
 
 const Container = styled.div`
   margin: 8px;
-  border: 1px solid lightgrey;
   border-radius: 15px;
-  width: 20vw;
+  width: calc(100% / 4 - 18px);
   height: 90%;
-  background-color: white;
 
   display: inline-flex;
   flex-direction: column;
@@ -22,15 +20,17 @@ const Container = styled.div`
       width: 80vw;
       margin: 0 10vw;
     }
-    
+
+    background-color: ${theme.colors.primaryBackground};
+    border: 1px solid ${theme.colors.border};
   `}
 `;
 const Title = styled.h3`
   padding: 8px 16px;
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 600;
-  border-bottom: 1px solid lightgrey;
 `;
+
 const TaskList = styled.div`
   width: calc(100% - 16px);
   padding: 8px;
@@ -38,7 +38,7 @@ const TaskList = styled.div`
   // background-color: ${(props) =>
     props.isdraggingover ? "#FFEBE6" : props.isStart ? "#E3FCEF" : "inherit"};
   background-color: ${(props) =>
-    props.isdraggingover ? "lightgrey" : "inherit"};
+    props.isdraggingover ? props.theme.colors.secondaryBackground : "inherit"};
   flex-grow: 1;
   min-height: 100px;
   overflow-y: auto;
@@ -67,6 +67,11 @@ const TaskList = styled.div`
   ::-webkit-scrollbar-thumb:active {
     background: rgba(0, 0, 0, 0.5);
   }
+
+  ${({ theme }) => css`
+    border-top: 1px solid ${theme.colors.border};
+    border-bottom: 1px solid ${theme.colors.border};
+  `}
 `;
 
 const InnerList = React.memo(

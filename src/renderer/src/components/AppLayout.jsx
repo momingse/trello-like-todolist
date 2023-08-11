@@ -13,11 +13,9 @@ const StyledAppContainer = styled.div`
 `
 
 const StyledAppContent = styled.div`
-  overflow: hidden;
-
   ${({ headerHeight }) => css`
     padding-top: calc(2.8rem + 1px);
-    height: calc(100% - 2.8rem);
+    height: calc(100% - 2.8rem - 1px);
   `}
 `
 const AppLayout = (props) => {

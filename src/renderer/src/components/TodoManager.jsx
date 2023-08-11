@@ -9,13 +9,16 @@ import useWindowSize from '../hooks/useWindowSize'
 import theme from '../theme/theme'
 
 const TodoContainer = styled.div`
+  display: flex;
   height: 100%;
 `
 
 const ColumnsContainer = styled.div`
-  padding: 7.5% 2.5vw 7.5%;
+  position: relative;
+  padding: 0 2.5vw;
   width: 95vw;
-  height: 85%;
+  top: 10%;
+  height: 80%;
   min-height: 400px;
 
   ${({ theme }) => css`
@@ -26,6 +29,18 @@ const ColumnsContainer = styled.div`
       padding-right: 0;
     }
     background-color: ${theme.colors.primaryBackground};
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: calc(-12.5%);
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: ${theme.colors.primaryBackground};
+      z-index: -1;
+      padding: calc(12.5%) 0;
+    }
   `}
 `
 

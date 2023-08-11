@@ -28,6 +28,7 @@ const ColumnsContainer = styled.div`
     @media (max-width: ${theme.breakpoints.values.md}px) {
       white-space: nowrap;
       width: auto;
+      padding: 10vh 0;
     }
     background-color: ${theme.colors.primaryBackground};
   `}
@@ -84,7 +85,7 @@ const TodoManager = () => {
   const handleOnDragEnd = (result) => {
     // document.body.style.color = "inherit";
     // document.body.style.backgroundColor = "inherit";
-    setTimeout(() => autoScroll({ instant: false }), 2000)
+    setTimeout(() => autoScroll({ instant: false }), 100)
 
     const { destination, source, draggableId } = result
 

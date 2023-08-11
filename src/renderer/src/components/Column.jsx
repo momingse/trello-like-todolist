@@ -1,10 +1,10 @@
-import React from "react";
-import styled, { css } from "styled-components";
-import { Droppable } from "react-beautiful-dnd";
-import { useSelector } from "react-redux";
-import TaskCreator from "./TaskCreator";
-import Task from "./Task";
-import { selectColumnById } from "../redux/todoSlice";
+import React from 'react'
+import styled, { css } from 'styled-components'
+import { Droppable } from 'react-beautiful-dnd'
+import { useSelector } from 'react-redux'
+import TaskCreator from './TaskCreator'
+import Task from './Task'
+import { selectColumnById } from '../redux/todoSlice'
 
 const Container = styled.div`
   margin: 8px;
@@ -24,81 +24,54 @@ const Container = styled.div`
     background-color: ${theme.colors.primaryBackground};
     border: 1px solid ${theme.colors.border};
   `}
-`;
+`
 const Title = styled.h3`
   padding: 8px 16px;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   font-weight: 600;
-`;
+`
 
 const TaskList = styled.div`
   width: calc(100% - 16px);
   padding: 8px;
   transition: background-color 0.2s ease;
   // background-color: ${(props) =>
-    props.isdraggingover ? "#FFEBE6" : props.isStart ? "#E3FCEF" : "inherit"};
+    props.isdraggingover ? '#FFEBE6' : props.isStart ? '#E3FCEF' : 'inherit'};
   background-color: ${(props) =>
-    props.isdraggingover ? props.theme.colors.secondaryBackground : "inherit"};
+    props.isdraggingover ? props.theme.colors.secondaryBackground : 'inherit'};
   flex-grow: 1;
   min-height: 100px;
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
   // scrollbar-gutter: stable both-edges;
   // border-radius: 0 0 15px 15px;
-
-  ::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  ::-webkit-scrollbar-track {
-    border-radius: 5px;
-    background: rgba(0, 0, 0, 0.1);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    background: rgba(0, 0, 0, 0.2);
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.3);
-  }
-
-  ::-webkit-scrollbar-thumb:active {
-    background: rgba(0, 0, 0, 0.5);
-  }
 
   ${({ theme }) => css`
     border-top: 1px solid ${theme.colors.border};
     border-bottom: 1px solid ${theme.colors.border};
   `}
-`;
+`
 
-const InnerList = React.memo(
-  ({ taskIds, columnId, isFirstColumn, isLastColumn }) => {
-    function areEqual(prevProps, nextProps) {
-      if (prevProps.taskIds === nextProps.taskIds) {
-        return true;
-      }
-      return false;
-    }
-
-    return taskIds.map((taskId, index) => (
-      <Task
-        key={taskId}
-        taskId={taskId}
-        index={index}
-        columnId={columnId}
-        isFirstColumn={isFirstColumn}
-        isLastColumn={isLastColumn}
-      />
-    ));
+const InnerList = React.memo(({ taskIds, columnId, isFirstColumn, isLastColumn }) => {
+  function areEqual(prevProps, nextProps) {
+    return prevProps.taskIds === nextProps.taskIds
   }
-);
+
+  return taskIds.map((taskId, index) => (
+    <Task
+      key={taskId}
+      taskId={taskId}
+      index={index}
+      columnId={columnId}
+      isFirstColumn={isFirstColumn}
+      isLastColumn={isLastColumn}
+    />
+  ))
+})
 
 const Column = (props) => {
-  const { columnId, isFirstColumn, isLastColumn } = props;
-  const column = useSelector((state) => selectColumnById(state, columnId));
+  const { columnId, isFirstColumn, isLastColumn } = props
+  const column = useSelector((state) => selectColumnById(state, columnId))
 
   return (
     <Container>
@@ -126,7 +99,7 @@ const Column = (props) => {
       </Droppable>
       <TaskCreator columnId={columnId} />
     </Container>
-  );
-};
+  )
+}
 
-export default Column;
+export default Column

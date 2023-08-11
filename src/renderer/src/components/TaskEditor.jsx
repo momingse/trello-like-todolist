@@ -1,29 +1,21 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogActions,
-  Input,
-  TextField,
-  Box,
-  Button,
-} from "@mui/material";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import styled, { css, withTheme } from "styled-components";
-import dayjs from "dayjs";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { editTask } from "../redux/todoSlice";
+import { Dialog, DialogContent, DialogActions, Input, TextField, Box, Button } from '@mui/material'
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import styled, { css, withTheme } from 'styled-components'
+import dayjs from 'dayjs'
+import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { editTask } from '../redux/todoSlice'
 
-import ClearIcon from "@mui/icons-material/Clear";
+import ClearIcon from '@mui/icons-material/Clear'
 
 const StyledDialogHeader = styled.div`
   display: flex;
   margin-bottom: 16px;
   justify-content: space-between;
-`;
+`
 
 const StyledDialog = styled(Dialog)`
   & .MuiPaper-root {
@@ -43,7 +35,7 @@ const StyledDialog = styled(Dialog)`
       color: ${theme.colors.font};
     }
   `}
-`;
+`
 
 const StyledInput = styled(Input)`
   ${({ theme }) => css`
@@ -59,7 +51,7 @@ const StyledInput = styled(Input)`
       border: 1px solid ${theme.colors.borderActive} !important;
     }
   `}
-`;
+`
 
 const StyledTextField = styled(TextField)`
   ${({ theme }) => css`
@@ -75,7 +67,7 @@ const StyledTextField = styled(TextField)`
       border: 1px solid ${theme.colors.borderActive} !important;
     }
   `}
-`;
+`
 
 const StyledDatePicker = styled(DatePicker)`
   width: calc(100% - 2px);
@@ -94,7 +86,7 @@ const StyledDatePicker = styled(DatePicker)`
       border: 1px solid ${theme.colors.borderActive} !important;
     }
   `}
-`;
+`
 
 const StyledDialogActions = styled(DialogActions)`
   ${({ theme }) => css`
@@ -102,33 +94,33 @@ const StyledDialogActions = styled(DialogActions)`
       color: ${theme.colors.font};
     }
   `}
-`;
+`
 
 const TaskEditor = (props) => {
-  const { task, isOpened, handleCloseTaskEditor, theme } = props;
-  const [title, setTitle] = useState(task.title);
-  const [deadline, setDeadline] = useState(dayjs(task.deadline));
-  const [description, setDescription] = useState(task.description);
-  const [error, setError] = useState(false);
+  const { task, isOpened, handleCloseTaskEditor, theme } = props
+  const [title, setTitle] = useState(task.title)
+  const [deadline, setDeadline] = useState(dayjs(task.deadline))
+  const [description, setDescription] = useState(task.description)
+  const [error, setError] = useState(false)
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const handleReset = () => {
-    setTitle(task.title);
-    setDeadline(dayjs(task.deadline));
-    setDescription(task.description);
-  };
+    setTitle(task.title)
+    setDeadline(dayjs(task.deadline))
+    setDescription(task.description)
+  }
 
   const handleSubmit = () => {
-    if (title === "") {
-      setError(true);
-      return;
+    if (title === '') {
+      setError(true)
+      return
     }
 
     // check the deadline cannot be earlier than today
-    if (deadline.startOf("day").valueOf() < dayjs().startOf("day").valueOf()) {
-      setError(true);
-      return;
+    if (deadline.startOf('day').valueOf() < dayjs().startOf('day').valueOf()) {
+      setError(true)
+      return
     }
 
     dispatch(
@@ -136,12 +128,12 @@ const TaskEditor = (props) => {
         taskId: task.id,
         title: title,
         description: description,
-        deadline: deadline.valueOf(),
+        deadline: deadline.valueOf()
       })
-    );
+    )
 
-    handleCloseTaskEditor();
-  };
+    handleCloseTaskEditor()
+  }
 
   const DatePickerLayoutSX = {
     backgroundColor: theme.colors.primaryBackground,
@@ -149,47 +141,44 @@ const TaskEditor = (props) => {
 
     [`.MuiButtonBase-root, .MuiDayCalendar-weekContainer, .MuiDayCalendar-weekContainer, .MuiTypography-root`]:
       {
-        color: theme.colors.font,
+        color: theme.colors.font
       },
 
     [`.Mui-disabled, .Mui-disabled:not(.Mui-selected)`]: {
-      color: theme.colors.disabledFont,
-    },
-  };
+      color: theme.colors.disabledFont
+    }
+  }
 
   return (
     <StyledDialog
       open={isOpened}
       onClose={handleCloseTaskEditor}
-      scroll={"paper"}
+      scroll={'paper'}
       aria-labelledby="simple-dialog-title"
     >
       <DialogContent dividers={true}>
         <StyledDialogHeader>
-          <h2>Create Task</h2>
-          <ClearIcon
-            onClick={handleCloseTaskEditor}
-            sx={{ cursor: "pointer" }}
-          />
+          <h2>Edit Task</h2>
+          <ClearIcon onClick={handleCloseTaskEditor} sx={{ cursor: 'pointer' }} />
         </StyledDialogHeader>
         <span>Title</span>
         <StyledInput
-          error={error && title === ""}
+          error={error && title === ''}
           id="title-input"
           label=""
           variant="standard"
           fullWidth
           onChange={(e) => {
-            setTitle(e.target.value);
+            setTitle(e.target.value)
           }}
-          sx={{ marginBottom: "16px" }}
+          sx={{ marginBottom: '16px' }}
           value={title}
           disableUnderline={true}
         />
-        <Box sx={{ marginBottom: "16px" }}>
+        <Box sx={{ marginBottom: '16px' }}>
           <span>Deadline</span>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DatePicker", "DatePicker"]}>
+            <DemoContainer components={['DatePicker', 'DatePicker']}>
               <StyledDatePicker
                 label=""
                 variant="standard"
@@ -199,8 +188,8 @@ const TaskEditor = (props) => {
                 format="MM-DD-YYYY"
                 slotProps={{
                   layout: {
-                    sx: DatePickerLayoutSX,
-                  },
+                    sx: DatePickerLayoutSX
+                  }
                 }}
               />
             </DemoContainer>
@@ -215,11 +204,11 @@ const TaskEditor = (props) => {
           onChange={(e) => setDescription(e.target.value)}
           value={description}
           InputLabelProps={{
-            disabled: true,
+            disabled: true
           }}
           variant="standard"
           InputProps={{
-            disableUnderline: true,
+            disableUnderline: true
           }}
         />
       </DialogContent>
@@ -228,7 +217,7 @@ const TaskEditor = (props) => {
         <Button onClick={handleSubmit}>Submit</Button>
       </StyledDialogActions>
     </StyledDialog>
-  );
-};
+  )
+}
 
-export default withTheme(TaskEditor);
+export default withTheme(TaskEditor)

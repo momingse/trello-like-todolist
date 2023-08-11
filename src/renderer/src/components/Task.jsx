@@ -67,11 +67,13 @@ const ButtonContainer = styled.div`
 const TaskTitle = styled.div`
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 600;
+  text-overflow: ellipsis;
 `
 
 const TaskDescription = styled.div`
   font-size: 0.9rem;
   white-space: pre-wrap;
+  word-wrap: break-word;
 `
 
 const TaskDeadline = styled.div`

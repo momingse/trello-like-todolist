@@ -8,12 +8,8 @@ import ColumnNavigator from './ColumnNavigator'
 import useWindowSize from '../Hooks/useWindowSize'
 import theme from '../theme/theme'
 
-const TodoAppContainer = styled.div`
+const TodoContainer = styled.div`
   height: 100%;
-
-  ${({ theme }) => css`
-    color: ${theme.colors.font};
-  `}
 `
 
 const ColumnsContainer = styled.div`
@@ -118,7 +114,7 @@ const TodoManager = () => {
   }
 
   return (
-    <TodoAppContainer>
+    <TodoContainer>
       <DragDropContext
         onDragEnd={handleOnDragEnd}
         onDragStart={handleOnDragStart}
@@ -148,7 +144,7 @@ const TodoManager = () => {
           />
         </NavigatorContainer>
       </DragDropContext>
-    </TodoAppContainer>
+    </TodoContainer>
   )
 }
 

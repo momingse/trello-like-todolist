@@ -9,6 +9,7 @@ import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { addTask } from '../redux/todoSlice'
+import { successMsg, errorMsg } from '../redux/snackbarSlice'
 
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
@@ -129,7 +130,6 @@ const TaskCreator = (props) => {
   const [title, setTitle] = useState('')
   const [deadline, setDeadline] = useState(dayjs())
   const [description, setDescription] = useState('')
-  const [error, setError] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -146,7 +146,7 @@ const TaskCreator = (props) => {
 
   const handleSubmit = () => {
     if (title === '') {
-      setError(true)
+      dispatch(errorMsg({ msg: 'Title cannot be empty' }))
       return
     }
 
@@ -160,13 +160,13 @@ const TaskCreator = (props) => {
     )
 
     handleClose()
+    dispatch(successMsg({ msg: 'Task created successfully' }))
   }
 
   const handleReset = () => {
     setTitle('')
     setDeadline(dayjs())
     setDescription('')
-    setError(false)
   }
 
   const DatePickerLayoutSX = {
@@ -205,7 +205,6 @@ const TaskCreator = (props) => {
           </StyledDialogHeader>
           <span>Title</span>
           <StyledInput
-            error={error && title === ''}
             id="title-input"
             label=""
             variant="standard"

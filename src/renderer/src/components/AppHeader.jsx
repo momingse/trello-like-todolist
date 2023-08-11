@@ -4,7 +4,6 @@ import MenuIcon from '@mui/icons-material/Menu'
 import ViewWeekIcon from '@mui/icons-material/ViewWeek'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { useState } from 'react'
-import AppDrawer from './AppDrawer'
 import { useDispatch } from 'react-redux'
 import { openDrawer } from '../redux/appSlice'
 
@@ -37,7 +36,7 @@ const StyledMenuIcon = styled(MenuIcon)`
   cursor: pointer;
 `
 
-const AppHeader = () => {
+const AppHeader =(props) => {
   const { pathname } = useLocation()
   const title = HEADER_TITLE[pathname].title
   const dispatch = useDispatch()
@@ -50,7 +49,6 @@ const AppHeader = () => {
     <StyledHeaderContainer>
       <StyledMenuIcon onClick={handleOpenDrawer} />
       {title ? title : '404'}
-      <AppDrawer />
     </StyledHeaderContainer>
   )
 }

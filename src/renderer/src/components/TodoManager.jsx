@@ -9,9 +9,7 @@ import useWindowSize from '../Hooks/useWindowSize'
 import theme from '../theme/theme'
 
 const TodoAppContainer = styled.div`
-  display: flex;
   height: 100%;
-  align-items: center;
 
   ${({ theme }) => css`
     color: ${theme.colors.font};
@@ -19,9 +17,9 @@ const TodoAppContainer = styled.div`
 `
 
 const ColumnsContainer = styled.div`
-  padding: 15vh 2.5vw 5vh;
+  padding: 7.5% 2.5vw 7.5%;
   width: 95vw;
-  height: 80vh;
+  height: 85%;
   min-height: 400px;
 
   ${({ theme }) => css`

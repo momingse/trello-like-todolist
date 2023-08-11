@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   drawer: {
-    isOpen: true
+    isOpen: false
   },
   snackbar: {
     successSnackbarOpen: false,

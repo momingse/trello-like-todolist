@@ -1,30 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react'
 
 const useScroll = (el) => {
-  const [scrollValue, setScrollValue] = useState(0);
+  const [scrollValue, setScrollValue] = useState(0)
 
   useEffect(() => {
     const handleScroll = (e) => {
-      const { scrollLeft } = e.target.scrollingElement;
-      setScrollValue(scrollLeft);
-    };
+      const { scrollLeft } = e.target.scrollingElement
+      setScrollValue(scrollLeft)
+    }
 
-    if (!el) return;
-    window.addEventListener("scroll", handleScroll);
+    if (!el) return
+    window.addEventListener('scroll', handleScroll)
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [el]);
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [el])
 
   const scrollTo = (scrollLeft) => {
     el.scrollTo({
       left: scrollLeft,
-      behavior: "smooth",
-    });
-  };
+      behavior: 'smooth'
+    })
+  }
 
-  return [scrollValue, scrollTo];
-};
+  return [scrollValue, scrollTo]
+}
 
-export default useScroll;
+export default useScroll

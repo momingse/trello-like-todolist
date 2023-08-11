@@ -8,9 +8,9 @@ import ColumnNavigator from './ColumnNavigator'
 import useWindowSize from '../Hooks/useWindowSize'
 import theme from '../theme/theme'
 
-const AppContainer = styled.div`
+const TodoAppContainer = styled.div`
   display: flex;
-  height: 100vh;
+  height: 100%;
   align-items: center;
 
   ${({ theme }) => css`
@@ -19,7 +19,7 @@ const AppContainer = styled.div`
 `
 
 const ColumnsContainer = styled.div`
-  padding: 10vh 2.5vw;
+  padding: 15vh 2.5vw 5vh;
   width: 95vw;
   height: 80vh;
   min-height: 400px;
@@ -28,7 +28,8 @@ const ColumnsContainer = styled.div`
     @media (max-width: ${theme.breakpoints.values.md}px) {
       white-space: nowrap;
       width: auto;
-      padding: 10vh 0;
+      padding-left: 0;
+      padding-right: 0;
     }
     background-color: ${theme.colors.primaryBackground};
   `}
@@ -119,7 +120,7 @@ const TodoManager = () => {
   }
 
   return (
-    <AppContainer>
+    <TodoAppContainer>
       <DragDropContext
         onDragEnd={handleOnDragEnd}
         onDragStart={handleOnDragStart}
@@ -149,7 +150,7 @@ const TodoManager = () => {
           />
         </NavigatorContainer>
       </DragDropContext>
-    </AppContainer>
+    </TodoAppContainer>
   )
 }
 

@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import Snackbar from '@mui/material/Snackbar'
 import { Alert } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
@@ -36,7 +35,7 @@ const SnackbarManager = () => {
   }
 
   return (
-    <Box>
+    <>
       <CustomizedSnackbar
         open={successSnackbarOpen}
         onClose={handleClose}
@@ -55,7 +54,7 @@ const SnackbarManager = () => {
         severity={'info'}
         msg={infoMessage}
       />
-    </Box>
+    </>
   )
 }
 

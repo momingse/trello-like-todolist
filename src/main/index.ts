@@ -1,9 +1,10 @@
-import { app, shell, BrowserWindow } from 'electron'
+import { app, shell, BrowserWindow, BrowserViewConstructorOptions as WindowOptions } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { createFileRoute, createURLRoute } from 'electron-router-dom'
 
-function createWindow(): void {
+function createWindow(id: string, option: WindowOptions = {}): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -17,6 +18,10 @@ function createWindow(): void {
     }
   })
 
+  const devServerURL = createURLRoute(process.env['ELECTRON_RENDERER_URL']!, id)
+
+  const fileRoute = createFileRoute(join(__dirname, '../renderer/index.html'), id)
+
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
@@ -29,9 +34,9 @@ function createWindow(): void {
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+    mainWindow.loadURL(devServerURL)
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    mainWindow.loadFile(...fileRoute)
   }
 
   if (is.dev) {
@@ -53,7 +58,11 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  createWindow()
+  createWindow('main', {
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.js')
+    }
+  })
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

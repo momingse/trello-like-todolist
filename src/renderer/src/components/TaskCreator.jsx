@@ -9,7 +9,7 @@ import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { addTask } from '../redux/todoSlice'
-import { successMsg, errorMsg } from '../redux/snackbarSlice'
+import { successMsg, errorMsg } from '../redux/appSlice'
 
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'

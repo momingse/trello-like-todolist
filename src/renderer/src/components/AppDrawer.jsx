@@ -2,6 +2,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { HEADER_TITLE } from './AppHeader'
 import { Drawer } from '@mui/material'
 import { styled, css } from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
+import { closeDrawer } from '../redux/appSlice'
 
 const StyledDrawer = styled(Drawer)`
   ${({ theme }) => css`
@@ -21,6 +23,10 @@ const StyledDrawerItem = styled.div`
   font-size: 1.25rem;
   width: 250px;
   cursor: pointer;
+
+  ${({ isSelected, theme }) => css`
+    background-color: ${isSelected ? theme.colors.secondaryBackground : 'inherit'};
+  `}
 `
 
 const StyledIconContainer = styled.div`
@@ -30,14 +36,20 @@ const StyledIconContainer = styled.div`
 `
 
 const AppDrawer = (props) => {
-  const { open, onClose } = props
+  // const { open, onClose } = props
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const currentPage = HEADER_TITLE[pathname]
+  const dispatch = useDispatch()
+
+  const open = useSelector((state) => state.app.drawer.isOpen)
+
+  const onClose = () => {
+    dispatch(closeDrawer())
+  }
 
   const handleNavigate = (path) => {
     if (pathname !== path) navigate(path)
-    onClose()
+    setTimeout(() => dispatch(closeDrawer()), 100)
   }
 
   return (
@@ -49,6 +61,7 @@ const AppDrawer = (props) => {
             onClick={() => {
               handleNavigate(path)
             }}
+            isSelected={pathname === path}
           >
             <StyledIconContainer>{page.icon}</StyledIconContainer>
             {page.title}

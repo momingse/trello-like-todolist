@@ -2,11 +2,15 @@ import { styled, css } from 'styled-components'
 import { useLocation } from 'react-router-dom'
 import MenuIcon from '@mui/icons-material/Menu'
 import ViewWeekIcon from '@mui/icons-material/ViewWeek'
+import SettingsIcon from '@mui/icons-material/Settings'
 import { useState } from 'react'
 import AppDrawer from './AppDrawer'
+import { useDispatch } from 'react-redux'
+import { openDrawer } from '../redux/appSlice'
 
 export const HEADER_TITLE = {
-  '/todo-state': { title: 'Todo State', icon: <ViewWeekIcon /> }
+  '/todo-state': { title: 'Todo State', icon: <ViewWeekIcon /> },
+  '/setting': { title: 'Setting', icon: <SettingsIcon /> }
 }
 
 const StyledHeaderContainer = styled.div`
@@ -34,23 +38,19 @@ const StyledMenuIcon = styled(MenuIcon)`
 `
 
 const AppHeader = () => {
-  const [openDrawer, setOpenDrawer] = useState(false)
   const { pathname } = useLocation()
   const title = HEADER_TITLE[pathname].title
+  const dispatch = useDispatch()
 
   const handleOpenDrawer = () => {
-    setOpenDrawer(true)
-  }
-
-  const handleCloseDrawer = () => {
-    setOpenDrawer(false)
+    dispatch(openDrawer())
   }
 
   return (
     <StyledHeaderContainer>
       <StyledMenuIcon onClick={handleOpenDrawer} />
       {title ? title : '404'}
-      <AppDrawer open={openDrawer} onClose={handleCloseDrawer} />
+      <AppDrawer />
     </StyledHeaderContainer>
   )
 }

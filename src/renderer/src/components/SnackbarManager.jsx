@@ -1,7 +1,7 @@
 import Snackbar from '@mui/material/Snackbar'
 import { Alert } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
-import { clearSnackbar } from '../redux/snackbarSlice'
+import { clearSnackbar } from '../redux/appSlice'
 
 const HIDEDURATION = 2000
 
@@ -21,12 +21,12 @@ const CustomizedSnackbar = (props) => {
 }
 
 const SnackbarManager = () => {
-  const successMessage = useSelector((state) => state.snackbar.successMessage)
-  const errorMessage = useSelector((state) => state.snackbar.errorMessage)
-  const infoMessage = useSelector((state) => state.snackbar.infoMessage)
-  const successSnackbarOpen = useSelector((state) => state.snackbar.successSnackbarOpen)
-  const errorSnackbarOpen = useSelector((state) => state.snackbar.errorSnackbarOpen)
-  const infoSnackbarOpen = useSelector((state) => state.snackbar.infoSnackbarOpen)
+  const successMessage = useSelector((state) => state.app.snackbar.successMessage)
+  const errorMessage = useSelector((state) => state.app.snackbar.errorMessage)
+  const infoMessage = useSelector((state) => state.app.snackbar.infoMessage)
+  const successSnackbarOpen = useSelector((state) => state.app.snackbar.successSnackbarOpen)
+  const errorSnackbarOpen = useSelector((state) => state.app.snackbar.errorSnackbarOpen)
+  const infoSnackbarOpen = useSelector((state) => state.app.snackbar.infoSnackbarOpen)
 
   const dispatch = useDispatch()
 

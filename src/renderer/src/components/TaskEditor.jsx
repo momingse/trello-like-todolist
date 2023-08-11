@@ -8,7 +8,7 @@ import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { editTask } from '../redux/todoSlice'
-import { errorMsg, successMsg } from '../redux/snackbarSlice'
+import { errorMsg, successMsg } from '../redux/appSlice'
 
 import ClearIcon from '@mui/icons-material/Clear'
 

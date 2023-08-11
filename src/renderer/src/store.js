@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import todoReducer, { toDoListenerMiddleware } from './redux/todoSlice'
-import snackbarReducer from './redux/snackbarSlice'
+import appReducer from './redux/appSlice'
 
 export const store = configureStore({
   reducer: {
     todo: todoReducer,
-    snackbar: snackbarReducer
+    app: appReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(toDoListenerMiddleware.middleware)

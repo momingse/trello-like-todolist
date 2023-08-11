@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { moveTask, selectColumnOrder } from '../redux/todoSlice'
 import Column from './Column'
 import ColumnNavigator from './ColumnNavigator'
-import useWindowSize from '../Hooks/useWindowSize'
+import useWindowSize from '../hooks/useWindowSize'
 import theme from '../theme/theme'
 
 const TodoContainer = styled.div`

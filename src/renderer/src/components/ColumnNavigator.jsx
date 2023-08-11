@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import useScroll from "../Hooks/useScroll";
+import useScroll from "../hooks/useScroll";
 import { useEffect } from "react";
 
 const ColumnNavigatorContainer = styled.div`

@@ -42,6 +42,7 @@ const StyledInput = styled(Input)`
   ${({ theme }) => css`
     border: 1px solid ${theme.colors.border} !important;
     border-radius: 6px !important;
+
     input {
       color: ${theme.colors.font};
       padding: 0.2rem 1rem;
@@ -58,6 +59,7 @@ const StyledTextField = styled(TextField)`
   ${({ theme }) => css`
     border: 1px solid ${theme.colors.border} !important;
     border-radius: 6px !important;
+
     textarea {
       color: ${theme.colors.font};
       padding: 0.2rem 1rem;

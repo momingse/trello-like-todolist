@@ -1,4 +1,4 @@
-import { createSlice, isAnyOf, nanoid } from '@reduxjs/toolkit'
+import { createSlice, isAnyOf, nanoid, createSelector } from '@reduxjs/toolkit'
 import { createListenerMiddleware } from '@reduxjs/toolkit'
 
 const template = {
@@ -191,12 +191,34 @@ const todoSlice = createSlice({
         previousColumnTaskIds.push(taskId)
         state.columns[previousColumnId].taskIds = previousColumnTaskIds
       }
+    },
+    importTodoData: {
+      prepare: ({ tasks, columns }) => {
+        return {
+          payload: {
+            tasks,
+            columns
+          }
+        }
+      },
+      reducer: (state, action) => {
+        const { tasks, columns } = action.payload
+        state.tasks = tasks
+        state.columns = columns
+      }
     }
   }
 })
 
-export const { addTask, editTask, deleteTask, moveTask, moveTaskForward, moveTaskBackward } =
-  todoSlice.actions
+export const {
+  addTask,
+  editTask,
+  deleteTask,
+  moveTask,
+  moveTaskForward,
+  moveTaskBackward,
+  importTodoData
+} = todoSlice.actions
 
 export default todoSlice.reducer
 
@@ -209,6 +231,13 @@ toDoListenerMiddleware.startListening({
   }
 })
 
+const selectTodoState = (state) => state.todo
+
 export const selectColumnOrder = (state) => state.todo.columnOrder
 export const selectColumnById = (state, columnId) => state.todo.columns[columnId]
 export const selectTaskById = (state, taskId) => state.todo.tasks[taskId]
+// export const selectTodo = (state) => ({ tasks: state.todo.tasks, columns: state.todo.columns })
+export const selectTodo = createSelector(selectTodoState, (todo) => ({
+  tasks: todo.tasks,
+  columns: todo.columns
+}))

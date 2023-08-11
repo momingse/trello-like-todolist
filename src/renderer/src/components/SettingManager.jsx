@@ -3,6 +3,7 @@ import { Tab, Tabs, Typography } from '@mui/material'
 import AppsIcon from '@mui/icons-material/Apps'
 import BuildIcon from '@mui/icons-material/Build'
 import styled, { withTheme, css } from 'styled-components'
+import ExtraSettingPanel from './ExtraSettingPanel'
 
 const SettingContainer = styled.div`
   width: 100%;
@@ -26,7 +27,7 @@ const SETTING = [
   {
     title: 'Extra',
     icon: <BuildIcon />,
-    component: <div>Extra</div>
+    component: <ExtraSettingPanel />
   }
 ]
 

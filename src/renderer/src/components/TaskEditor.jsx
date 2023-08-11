@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { editTask } from '../redux/todoSlice'
+import { errorMsg, successMsg } from '../redux/snackbarSlice'
 
 import ClearIcon from '@mui/icons-material/Clear'
 
@@ -101,7 +102,6 @@ const TaskEditor = (props) => {
   const [title, setTitle] = useState(task.title)
   const [deadline, setDeadline] = useState(dayjs(task.deadline))
   const [description, setDescription] = useState(task.description)
-  const [error, setError] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -113,13 +113,13 @@ const TaskEditor = (props) => {
 
   const handleSubmit = () => {
     if (title === '') {
-      setError(true)
+      dispatch(errorMsg({ msg: 'Title cannot be empty' }))
       return
     }
 
     // check the deadline cannot be earlier than today
     if (deadline.startOf('day').valueOf() < dayjs().startOf('day').valueOf()) {
-      setError(true)
+      dispatch(errorMsg({ msg: 'Your ddl is expired' }))
       return
     }
 
@@ -133,6 +133,7 @@ const TaskEditor = (props) => {
     )
 
     handleCloseTaskEditor()
+    dispatch(successMsg({ msg: 'Task edited successfully' }))
   }
 
   const DatePickerLayoutSX = {
@@ -163,7 +164,6 @@ const TaskEditor = (props) => {
         </StyledDialogHeader>
         <span>Title</span>
         <StyledInput
-          error={error && title === ''}
           id="title-input"
           label=""
           variant="standard"

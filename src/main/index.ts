@@ -3,6 +3,8 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { createFileRoute, createURLRoute } from 'electron-router-dom'
+import TrayGenerator from './TrayGenerator'
+import Store from 'electron-store'
 
 function createWindow(id: string, option: WindowOptions = {}): void {
   // Create the browser window.
@@ -47,6 +49,10 @@ function createWindow(id: string, option: WindowOptions = {}): void {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+const schema = {
+  launchAtLogin: false
+}
+
 app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
@@ -68,6 +74,14 @@ app.whenReady().then(() => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  })
+
+  const store = new Store(schema)
+  const Tray = new TrayGenerator(BrowserWindow.getAllWindows()[0], store)
+  Tray.createTray()
+
+  app.setLoginItemSettings({
+    openAtLogin: store.get('launchAtStart')
   })
 })
 

@@ -30,6 +30,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "dayjs": "^1.11.9",
     "electron-router-dom": "^1.0.5",
+    "electron-store": "^8.1.0",
     "electron-updater": "^5.3.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-redux": "^8.1.2",

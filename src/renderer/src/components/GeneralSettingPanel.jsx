@@ -1,6 +1,5 @@
-import ExportTodoButton from './setting/ExportTodoButton'
-import ImportTodoButton from './setting/ImportTodoButton'
 import styled from 'styled-components'
+import AutoStartupSwitch from './setting/AutoStartupSwitch'
 
 const StyledSettingItemContainer = styled.div`
   display: flex;
@@ -24,15 +23,11 @@ const SettingItem = (props) => {
   )
 }
 
-const ExtraSettingPanel = (props) => {
+const GeneralSettingPanel = (props) => {
   const EXTRA_SETTING_LIST = [
     {
-      title: 'export todo',
-      action: <ExportTodoButton />
-    },
-    {
-      title: 'import todo',
-      action: <ImportTodoButton />
+      title: 'launch when system starts',
+      action: <AutoStartupSwitch />
     }
   ]
 
@@ -45,4 +40,4 @@ const ExtraSettingPanel = (props) => {
   )
 }
 
-export default ExtraSettingPanel
+export default GeneralSettingPanel

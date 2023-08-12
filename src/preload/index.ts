@@ -1,8 +1,14 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
-const api = {}
+const api = {
+  setLaunchAtLogin: (value: boolean): void => ipcRenderer.send('set-launch-at-login', value),
+  getLaunchAtLogin: (): boolean => ipcRenderer.sendSync('get-launch-at-login'),
+  onUpdateLaunchAtLogin: (callback: (_event: Event, value: boolean) => void): void => {
+    ipcRenderer.on('update-launch-at-login', callback)
+  }
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise

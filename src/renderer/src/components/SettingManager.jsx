@@ -4,6 +4,7 @@ import AppsIcon from '@mui/icons-material/Apps'
 import BuildIcon from '@mui/icons-material/Build'
 import styled, { withTheme, css } from 'styled-components'
 import ExtraSettingPanel from './ExtraSettingPanel'
+import GeneralSettingPanel from './GeneralSettingPanel'
 
 const SettingContainer = styled.div`
   width: 100%;
@@ -22,7 +23,7 @@ const SETTING = [
   {
     title: 'General',
     icon: <AppsIcon />,
-    component: <div>General</div>
+    component: <GeneralSettingPanel />
   },
   {
     title: 'Extra',

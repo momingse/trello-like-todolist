@@ -12,27 +12,11 @@ class TrayGenerator {
   tray: Tray | null
   mainWindow: BrowserWindow
   store: ElectronStore
-  menu: Menu
 
   constructor(mainWindow: BrowserWindow, store: ElectronStore) {
     this.tray = null
     this.mainWindow = mainWindow
     this.store = store
-    this.menu = Menu.buildFromTemplate([
-      {
-        label: 'Launch at startup',
-        type: 'checkbox',
-        checked: this.store.get('launchAtStart') as boolean,
-        click: (event) => {
-          this.store.set('launchAtStart', event.checked)
-          this.UpdateMenu()
-        }
-      },
-      {
-        role: 'quit',
-        accelerator: 'Command+Q'
-      }
-    ])
   }
 
   getWindowPosition = (): Point => {
@@ -61,7 +45,23 @@ class TrayGenerator {
   }
 
   UpdateMenu = (): void => {
-    this.tray.setContextMenu(this.menu)
+    const menu = Menu.buildFromTemplate([
+      {
+        label: 'Launch at startup',
+        type: 'checkbox',
+        checked: this.store.get('launchAtLogin') as boolean,
+        click: (event) => {
+          this.store.set('launchAtLogin', event.checked)
+          this.mainWindow.webContents.send('update-launch-at-login', event.checked)
+          this.UpdateMenu()
+        }
+      },
+      {
+        role: 'quit',
+        accelerator: 'Command+Q'
+      }
+    ])
+    this.tray!.setContextMenu(menu)
   }
 
   createTray = (): void => {

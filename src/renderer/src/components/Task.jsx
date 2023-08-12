@@ -65,7 +65,6 @@ const ButtonContainer = styled.div`
 `
 
 const TaskTitle = styled.div`
-  font-family: 'Source Sans Pro', sans-serif;
   font-weight: 600;
   text-overflow: ellipsis;
 `

@@ -27,7 +27,6 @@ const Container = styled.div`
 `
 const Title = styled.h3`
   padding: 8px 16px;
-  font-family: 'Source Sans Pro', sans-serif;
   font-weight: 600;
 `
 

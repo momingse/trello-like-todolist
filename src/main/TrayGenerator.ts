@@ -1,6 +1,6 @@
-import { BrowserWindow, MenuItem } from 'electron'
+import { BrowserWindow, app } from 'electron'
 import { Tray, Menu } from 'electron'
-import ElectronStore from 'electron-store'
+import type ElectronStore from 'electron-store'
 import path from 'path'
 
 interface Point {
@@ -44,21 +44,24 @@ class TrayGenerator {
     }
   }
 
-  UpdateMenu = (): void => {
+  updateMenu = (): void => {
     const menu = Menu.buildFromTemplate([
       {
         label: 'Launch at startup',
         type: 'checkbox',
         checked: this.store.get('launchAtLogin') as boolean,
-        click: (event) => {
+        click: (event): void => {
+          if (process.platform === 'linux') return
           this.store.set('launchAtLogin', event.checked)
           this.mainWindow.webContents.send('update-launch-at-login', event.checked)
-          this.UpdateMenu()
+          this.updateMenu()
         }
       },
       {
-        role: 'quit',
-        accelerator: 'Command+Q'
+        label: 'Quit',
+        click: (): void => {
+          app.exit()
+        }
       }
     ])
     this.tray!.setContextMenu(menu)
@@ -68,7 +71,11 @@ class TrayGenerator {
     this.tray = new Tray(path.join(__dirname, '../../resources/icon.png'))
     this.tray.setIgnoreDoubleClickEvents(true)
     this.tray.on('click', this.toggleWindow)
-    this.UpdateMenu()
+    this.updateMenu()
+  }
+
+  destroy = (): void => {
+    this.tray?.destroy()
   }
 }
 

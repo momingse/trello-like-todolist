@@ -2,6 +2,8 @@ import Switch from '@mui/material/Switch'
 import { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import { withTheme } from 'styled-components'
+import { useDispatch } from 'react-redux'
+import { errorMsg } from '../../redux/appSlice'
 
 const AntSwitch = styled(Switch)(({ theme }) => ({
   width: 42,
@@ -48,9 +50,13 @@ const StyledSwitchContainer = styled('div')(({ theme }) => ({
 const AutoStartupSwitch = (props) => {
   const { theme } = props
   const [checked, setChecked] = useState(api.getLaunchAtLogin())
+  const dispatch = useDispatch()
 
   const handleOnChange = (e) => {
-    api.setLaunchAtLogin(e.target.checked)
+    if (!api.setLaunchAtLogin(e.target.checked)) {
+      dispatch(errorMsg({msg: "Sorry autoLaunch are not available on your platform"})) 
+      return
+    }
     setChecked(e.target.checked)
   }
 

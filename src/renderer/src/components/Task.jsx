@@ -50,6 +50,11 @@ const ButtonContainer = styled.div`
     cursor: pointer;
   }
 
+  svg:hover {
+    background-color: ${({ theme }) => `${theme.colors.secondary}`};
+    border-radius: 4px;
+  }
+
   & > svg:first-child {
     color: ${(props) =>
       props.isFirstColumn ? props.theme.colors.disabledFont : props.theme.colors.font};
@@ -111,6 +116,11 @@ const Task = (props) => {
     dispatch(moveTaskForward({ taskId, sourceIndex: index, sourceColumnId: columnId }))
   }
 
+  const handleOnClick = (e) => {
+    if (e.target instanceof SVGElement) return
+    setIsOpened(true)
+  }
+
   return (
     <>
       <TaskEditor task={task} isOpened={isOpened} handleCloseTaskEditor={handleCloseTaskEditor} />
@@ -124,7 +134,7 @@ const Task = (props) => {
             isDragDisabled={isDragDisabled}
             onMouseEnter={() => setIsShown(true)}
             onMouseLeave={() => setIsShown(false)}
-            onClick={() => setIsOpened(true)}
+            onClick={handleOnClick}
           >
             {/* <Handle {...provided.dragHandleProps}/> */}
             <TaskTitle>{task.title}</TaskTitle>

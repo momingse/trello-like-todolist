@@ -64,6 +64,7 @@ const StyledDialog = styled(Dialog)`
 `
 
 const StyledInput = styled(Input)`
+  margin-top: 8px;
   ${({ theme }) => css`
     border: 1px solid ${theme.colors.border} !important;
     border-radius: 6px !important;
@@ -81,6 +82,7 @@ const StyledInput = styled(Input)`
 `
 
 const StyledTextField = styled(TextField)`
+  margin-top: 8px !important;
   ${({ theme }) => css`
     border: 1px solid ${theme.colors.border} !important;
     border-radius: 6px !important;
@@ -243,6 +245,7 @@ const TaskCreator = (props) => {
             label=""
             fullWidth
             multiline
+            maxRows={5}
             onChange={(e) => setDescription(e.target.value)}
             value={description}
             InputLabelProps={{

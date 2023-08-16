@@ -46,13 +46,16 @@ const ButtonContainer = styled.div`
   z-index: 1;
 
   svg {
+    opacity: 0.7;
     font-size: 20px;
     cursor: pointer;
+    background-color: ${({ theme }) => `${theme.colors.secondary}`};
+    border-radius: 4px;
+    margin-left: 5px;
   }
 
   svg:hover {
-    background-color: ${({ theme }) => `${theme.colors.secondary}`};
-    border-radius: 4px;
+    opacity: 1;
   }
 
   & > svg:first-child {
@@ -94,7 +97,7 @@ const Task = (props) => {
   //   const [isDragDisabled, setIsDragDisabled] = React.useState(props.task.id === "task-1");
   const { taskId, index, columnId, isFirstColumn, isLastColumn } = props
   const [isDragDisabled, setIsDragDisabled] = useState(false)
-  const [isShown, setIsShown] = useState(false)
+  const [isHovering, setIsHovering] = useState(false)
   const [isOpened, setIsOpened] = useState(false)
 
   const dispatch = useDispatch()
@@ -132,15 +135,15 @@ const Task = (props) => {
             ref={provided.innerRef}
             isDragging={snapshot.isDragging}
             isDragDisabled={isDragDisabled}
-            onMouseEnter={() => setIsShown(true)}
-            onMouseLeave={() => setIsShown(false)}
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
             onClick={handleOnClick}
           >
             {/* <Handle {...provided.dragHandleProps}/> */}
             <TaskTitle>{task.title}</TaskTitle>
             <TaskDescription>{task.description}</TaskDescription>
             <TaskDeadline>{numberToDate(task.deadline)}</TaskDeadline>
-            {isShown && (
+            {isHovering && (
               <ButtonContainer isFirstColumn={isFirstColumn} isLastColumn={isLastColumn}>
                 <KeyboardArrowLeftIcon onClick={handleMoveTaskBackward} />
                 <KeyboardArrowRightIcon onClick={handleMoveTaskForward} />

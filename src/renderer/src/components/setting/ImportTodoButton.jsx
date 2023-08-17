@@ -4,9 +4,9 @@ import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt'
 import { useState } from 'react'
 import ClearIcon from '@mui/icons-material/Clear'
 import { useDispatch } from 'react-redux'
-import { errorMsg } from '../../redux/appSlice'
 import { importTodoData } from '../../redux/todoSlice'
 import dayjs from 'dayjs'
+import useSnackbar from '../../hooks/useSnackbar'
 
 const StyledDialogHeader = styled.div`
   display: flex;
@@ -85,6 +85,7 @@ const StyledDialogActions = styled(DialogActions)`
 const ImportTodoButton = () => {
   const [open, setOpen] = useState(false)
   const [todo, setTodo] = useState('')
+  const { snackbar } = useSnackbar()
 
   const dispatch = useDispatch()
 
@@ -142,7 +143,7 @@ const ImportTodoButton = () => {
       dispatch(importTodoData(todoObj))
       handleClose()
     } catch (e) {
-      dispatch(errorMsg({ msg: e.message }))
+      snackbar({ msg: e.message, type: 'warning' })
     }
   }
 

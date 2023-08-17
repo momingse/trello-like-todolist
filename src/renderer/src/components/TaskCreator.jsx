@@ -8,7 +8,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { addTask } from '../redux/todoSlice'
-import { successMsg, errorMsg } from '../redux/appSlice'
+import useSnackbar from '../hooks/useSnackbar'
 
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
@@ -133,6 +133,7 @@ const TaskCreator = (props) => {
   const [title, setTitle] = useState('')
   const [deadline, setDeadline] = useState(dayjs())
   const [description, setDescription] = useState('')
+  const { snackbar } = useSnackbar()
 
   const dispatch = useDispatch()
 
@@ -149,7 +150,7 @@ const TaskCreator = (props) => {
 
   const handleSubmit = () => {
     if (title === '') {
-      dispatch(errorMsg({ msg: 'Title cannot be empty' }))
+      snackbar({ msg: 'Title cannot be empty', type: 'warning' })
       return
     }
 
@@ -163,7 +164,7 @@ const TaskCreator = (props) => {
     )
 
     handleClose()
-    dispatch(successMsg({ msg: 'Task created successfully' }))
+    snackbar({ msg: 'Task created successfully', type: 'success' })
   }
 
   const handleReset = () => {

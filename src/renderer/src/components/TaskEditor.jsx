@@ -8,7 +8,7 @@ import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { editTask } from '../redux/todoSlice'
-import { errorMsg, successMsg } from '../redux/appSlice'
+import useSnackbar from '../hooks/useSnackbar'
 
 import ClearIcon from '@mui/icons-material/Clear'
 
@@ -106,6 +106,7 @@ const TaskEditor = (props) => {
   const [title, setTitle] = useState(task.title)
   const [deadline, setDeadline] = useState(dayjs(task.deadline))
   const [description, setDescription] = useState(task.description)
+  const { snackbar } = useSnackbar()
 
   const dispatch = useDispatch()
 
@@ -117,13 +118,13 @@ const TaskEditor = (props) => {
 
   const handleSubmit = () => {
     if (title === '') {
-      dispatch(errorMsg({ msg: 'Title cannot be empty' }))
+      snackbar({ msg: 'Title cannot be empty', type: 'warning' })
       return
     }
 
     // check the deadline cannot be earlier than today
     if (deadline.startOf('day').valueOf() < dayjs().startOf('day').valueOf()) {
-      dispatch(errorMsg({ msg: 'Your ddl is expired' }))
+      snackbar({ msg: 'Deadline is expired', type: 'warning' })
       return
     }
 
@@ -137,7 +138,7 @@ const TaskEditor = (props) => {
     )
 
     handleCloseTaskEditor()
-    dispatch(successMsg({ msg: 'Task edited successfully' }))
+    snackbar({ msg: 'Task edited successfully', type: 'success' })
   }
 
   const DatePickerLayoutSX = {

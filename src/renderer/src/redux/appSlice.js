@@ -5,12 +5,7 @@ const initialState = {
     isOpen: false
   },
   snackbar: {
-    successSnackbarOpen: false,
-    errorSnackbarOpen: false,
-    infoSnackbarOpen: false,
-    successMessage: '',
-    errorMessage: '',
-    infoMessage: ''
+    snacks: []
   }
 }
 
@@ -18,57 +13,40 @@ const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
-    clearSnackbar: (state) => {
-      state.snackbar.successSnackbarOpen = false
-      state.snackbar.errorSnackbarOpen = false
-      state.snackbar.infoSnackbarOpen = false
-      state.snackbar.successMessage = ''
-      state.snackbar.errorMessage = ''
-      state.snackbar.infoMessage = ''
-    },
-    successMsg: {
-      prepare: ({ msg }) => {
+    addSnack: {
+      prepare: ({ msg, type, id }) => {
         return {
           payload: {
-            msg
+            msg,
+            type,
+            id
           }
         }
       },
       reducer: (state, action) => {
-        const { msg } = action.payload
+        const { msg, type, id } = action.payload
 
-        state.snackbar.successSnackbarOpen = true
-        state.snackbar.successMessage = msg
+        state.snackbar.snacks.push({ id, type, msg, open: true })
       }
     },
-    errorMsg: {
-      prepare: ({ msg }) => {
-        return {
-          payload: {
-            msg
-          }
-        }
+    removeSnack: {
+      prepare: ({ id }) => {
+        return { payload: { id } }
       },
       reducer: (state, action) => {
-        const { msg } = action.payload
+        const { id } = action.payload
 
-        state.snackbar.errorSnackbarOpen = true
-        state.snackbar.errorMessage = msg
+        state.snackbar.snacks = state.snackbar.snacks.filter((snack) => snack.id !== id)
       }
     },
-    infoMsg: {
-      prepare: ({ msg }) => {
-        return {
-          payload: {
-            msg
-          }
-        }
+    hideSnack: {
+      prepare: ({ id }) => {
+        return { payload: { id } }
       },
       reducer: (state, action) => {
-        const { msg } = action.payload
+        const { id } = action.payload
 
-        state.snackbar.infoSnackbarOpen = true
-        state.snackbar.infoMessage = msg
+        state.snackbar.snacks.find((snack) => snack.id === id).open = false
       }
     },
     openDrawer: (state) => {
@@ -80,7 +58,6 @@ const appSlice = createSlice({
   }
 })
 
-export const { clearSnackbar, successMsg, errorMsg, infoMsg, openDrawer, closeDrawer } =
-  appSlice.actions
+export const { addSnack, removeSnack, hideSnack, openDrawer, closeDrawer } = appSlice.actions
 
 export default appSlice.reducer

@@ -1,9 +1,9 @@
 import { Button } from '@mui/material'
 import styled, { css } from 'styled-components'
 import ContentPasteIcon from '@mui/icons-material/ContentPaste'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { selectTodo } from '../../redux/todoSlice'
-import { infoMsg } from '../../redux/appSlice'
+import useSnackbar from '../../hooks/useSnackbar'
 
 const StyledButton = styled(Button)`
   ${({ theme }) => css`
@@ -21,12 +21,12 @@ const StyledButton = styled(Button)`
 `
 
 const ExportTodoButton = () => {
-  const dispatch = useDispatch()
   const todoData = useSelector(selectTodo)
+  const { snackbar } = useSnackbar()
 
   const handleOnClick = () => {
     navigator.clipboard.writeText(JSON.stringify(todoData))
-    dispatch(infoMsg({ msg: 'Todo data has been copied to clipboard' }))
+    snackbar({ msg: 'Todo data has been copied to clipboard', type: 'info' })
   }
 
   return (

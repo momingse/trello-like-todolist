@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import { withTheme } from 'styled-components'
 import { useDispatch } from 'react-redux'
-import { errorMsg } from '../../redux/appSlice'
+import useSnackbar from '../../hooks/useSnackbar'
 
 const AntSwitch = styled(Switch)(({ theme }) => ({
   width: 42,
@@ -50,11 +50,11 @@ const StyledSwitchContainer = styled('div')(({ theme }) => ({
 const AutoStartupSwitch = (props) => {
   const { theme } = props
   const [checked, setChecked] = useState(api.getLaunchAtLogin())
-  const dispatch = useDispatch()
+  const { snackbar } = useSnackbar()
 
   const handleOnChange = (e) => {
     if (!api.setLaunchAtLogin(e.target.checked)) {
-      dispatch(errorMsg({msg: "Sorry autoLaunch are not available on your platform"})) 
+      snackbar({ msg: 'Sorry autoLaunch is not available on your platform', type: 'warning' })
       return
     }
     setChecked(e.target.checked)

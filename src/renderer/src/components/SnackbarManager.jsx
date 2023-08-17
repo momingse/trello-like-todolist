@@ -1,7 +1,7 @@
 import Snackbar from '@mui/material/Snackbar'
 import { Alert } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
-import { clearSnackbar } from '../redux/appSlice'
+import { hideSnack } from '../redux/appSlice'
 
 const HIDEDURATION = 2000
 
@@ -21,39 +21,26 @@ const CustomizedSnackbar = (props) => {
 }
 
 const SnackbarManager = () => {
-  const successMessage = useSelector((state) => state.app.snackbar.successMessage)
-  const errorMessage = useSelector((state) => state.app.snackbar.errorMessage)
-  const infoMessage = useSelector((state) => state.app.snackbar.infoMessage)
-  const successSnackbarOpen = useSelector((state) => state.app.snackbar.successSnackbarOpen)
-  const errorSnackbarOpen = useSelector((state) => state.app.snackbar.errorSnackbarOpen)
-  const infoSnackbarOpen = useSelector((state) => state.app.snackbar.infoSnackbarOpen)
-
   const dispatch = useDispatch()
+  const snacks = useSelector((state) => state.app.snackbar.snacks)
 
-  const handleClose = () => {
-    dispatch(clearSnackbar())
+  const handleClose = (id) => {
+    dispatch(hideSnack({ id }))
   }
 
   return (
     <>
-      <CustomizedSnackbar
-        open={successSnackbarOpen}
-        onClose={handleClose}
-        severity={'success'}
-        msg={successMessage}
-      />
-      <CustomizedSnackbar
-        open={errorSnackbarOpen}
-        onClose={handleClose}
-        severity={'error'}
-        msg={errorMessage}
-      />
-      <CustomizedSnackbar
-        open={infoSnackbarOpen}
-        onClose={handleClose}
-        severity={'info'}
-        msg={infoMessage}
-      />
+      {snacks.map((snack) => (
+        <CustomizedSnackbar
+          key={snack.id}
+          severity={snack.type}
+          msg={snack.msg}
+          open={snack.open}
+          onClose={() => {
+            handleClose(snack.id)
+          }}
+        />
+      ))}
     </>
   )
 }

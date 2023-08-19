@@ -1,6 +1,6 @@
 import { BrowserWindow, app } from 'electron'
 import { Tray, Menu } from 'electron'
-import type ElectronStore from 'electron-store'
+import ElectronStore from 'electron-store'
 import path from 'path'
 
 interface Point {
@@ -8,12 +8,12 @@ interface Point {
   y: number
 }
 
-class TrayGenerator {
+class TrayGenerator<T extends Record<string, unknown>> {
   tray: Tray | null
   mainWindow: BrowserWindow
-  store: ElectronStore
+  store: ElectronStore<T>
 
-  constructor(mainWindow: BrowserWindow, store: ElectronStore) {
+  constructor(mainWindow: BrowserWindow, store: ElectronStore<T>) {
     this.tray = null
     this.mainWindow = mainWindow
     this.store = store

@@ -17,7 +17,9 @@
     "postinstall": "electron-builder install-app-deps",
     "build:win": "npm run build && electron-builder --win --config",
     "build:mac": "npm run build && electron-builder --mac --config",
-    "build:linux": "npm run build && electron-builder --linux --config"
+    "build:linux": "npm run build && electron-builder --linux --config",
+    "build:linux_arch": "npm run build && electron-builder --linux --config && cd dist/ && find . -name \"*.deb\" -exec debtap {} \\;",
+    "build:linux_arch_quiet": "npm run build && electron-builder --linux --config && cd dist/ && find . -name \"*.deb\" -exec debtap -Q {} \\;"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^2.0.0",

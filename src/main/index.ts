@@ -10,14 +10,37 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { createFileRoute, createURLRoute } from 'electron-router-dom'
 import TrayGenerator from './TrayGenerator'
-import Store from 'electron-store'
+import ElectronStore from 'electron-store'
+import dayjs from 'dayjs'
 // import { getAutoLaunchState, updateAutoLaunch } from './AutoLaunch'
+interface Task {
+  id: string
+  title: string
+  description: string
+  deadline: number
+}
+
+interface Column {
+  id: string
+  title: string
+  taskIds: string[]
+}
+
+export interface TodoState {
+  tasks: Record<string, Task>
+  columns: Record<string, Column>
+}
+
+interface ElectronStoreScheme extends Record<string, boolean | TodoState | null> {
+  launchAtLogin: boolean
+  todo: TodoState | null
+}
 
 function createWindow(id: string, option: WindowOptions = {}): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: 1024,
+    height: 768,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -89,13 +112,15 @@ app.whenReady().then(async () => {
   //     })
   // })
 
-  const scheme = {
-    launchAtLogin: false
+  const scheme: ElectronStoreScheme = {
+    launchAtLogin: false,
+    todo: null
   }
 
-  const store = new Store<Record<string, unknown>>({ defaults: scheme })
-
-  const Tray = new TrayGenerator(BrowserWindow.getAllWindows()[0], store)
+  const store: ElectronStore<ElectronStoreScheme> = new ElectronStore<ElectronStoreScheme>({
+    defaults: scheme
+  })
+  const Tray = new TrayGenerator<ElectronStoreScheme>(BrowserWindow.getAllWindows()[0], store)
   Tray.createTray()
 
   app.setLoginItemSettings({
@@ -121,6 +146,64 @@ app.whenReady().then(async () => {
 
   ipcMain.on('get-launch-at-login', (event) => {
     event.returnValue = store.get('launchAtLogin')
+  })
+
+  ipcMain.on('get-todo', (event) => {
+    event.returnValue = store.get('todo')
+  })
+
+  ipcMain.on('update-todo', (event, todoObj: TodoState) => {
+    const validateTasks = (todoObj: TodoState): boolean => {
+      if (!todoObj.tasks) return false
+
+      let valid = true
+      Object.values(todoObj.tasks).forEach((task) => {
+        if (!task.title) valid = false
+        if (!task.id) valid = false
+        if (typeof task.description === 'undefined') valid = false
+        if (typeof task.deadline === 'undefined' || dayjs.isDayjs(task.deadline)) valid = false
+      })
+      return valid
+    }
+
+    const validTaskIds = (taskIds: string[], tasks: Record<string, Task>): boolean => {
+      if (!Array.isArray(taskIds)) return false
+      let valid = true
+      taskIds.forEach((taskId) => {
+        if (typeof taskId !== 'string') valid = false
+        if (!tasks[taskId]) valid = false
+      })
+      return valid
+    }
+
+    const validateColumns = (todoObj: TodoState): boolean => {
+      if (!todoObj.columns) return false
+
+      let valid = true
+      Object.values(todoObj.columns).forEach((column) => {
+        if (!column.title) valid = false
+        if (!column.id) valid = false
+        if (!Array.isArray(column.taskIds)) valid = false
+        if (!validTaskIds(column.taskIds, todoObj.tasks)) valid = false
+      })
+      return valid
+    }
+
+    if (Object.keys(todoObj).length === 0) {
+      event.returnValue = false
+      return
+    }
+    if (!validateTasks(todoObj)) {
+      event.returnValue = false
+      return
+    }
+    if (!validateColumns(todoObj)) {
+      event.returnValue = false
+      return
+    }
+
+    store.set('todo', todoObj)
+    event.returnValue = true
   })
 })
 

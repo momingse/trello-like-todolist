@@ -41,7 +41,10 @@ const template = {
   columnOrder: ['column-1', 'column-2', 'column-3', 'column-4']
 }
 
-const initialState = JSON.parse(localStorage.getItem('todo')) || template
+// const initialState = JSON.parse(localStorage.getItem('todo')) || template
+const todoData = api.getTodo()
+const initialState =
+  todoData !== null ? { ...todoData, columnOrder: template.columnOrder } : template
 
 const todoSlice = createSlice({
   name: 'todo',
@@ -225,9 +228,21 @@ export default todoSlice.reducer
 export const toDoListenerMiddleware = createListenerMiddleware()
 
 toDoListenerMiddleware.startListening({
-  matcher: isAnyOf(addTask, editTask, deleteTask, moveTask),
+  matcher: isAnyOf(
+    addTask,
+    editTask,
+    deleteTask,
+    moveTask,
+    moveTaskBackward,
+    moveTaskForward,
+    importTodoData
+  ),
   effect: async (action, listenerApi) => {
-    localStorage.setItem('todo', JSON.stringify(listenerApi.getState().todo))
+    // localStorage.setItem('todo', JSON.stringify(listenerApi.getState().todo))
+    api.updateTodo({
+      tasks: listenerApi.getState().todo.tasks,
+      columns: listenerApi.getState().todo.columns
+    })
   }
 })
 

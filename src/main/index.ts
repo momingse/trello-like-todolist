@@ -7,7 +7,7 @@ import {
 } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import icon from '../../resources/icon.ico?asset'
 import { createFileRoute, createURLRoute } from 'electron-router-dom'
 import TrayGenerator from './TrayGenerator'
 import ElectronStore from 'electron-store'
@@ -46,6 +46,8 @@ function createWindow(id: string, option: WindowOptions = {}): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     ...option
   })
+
+  mainWindow.removeMenu()
 
   const devServerURL = createURLRoute(process.env['ELECTRON_RENDERER_URL']!, id)
 

@@ -4,6 +4,7 @@ import { Draggable } from 'react-beautiful-dnd'
 import ClearIcon from '@mui/icons-material/Clear'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
+import dayjs from 'dayjs'
 import TaskEditor from './TaskEditor'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteTask, selectTaskById, moveTaskBackward, moveTaskForward } from '../redux/todoSlice'
@@ -14,7 +15,8 @@ const TaskContainer = styled.div`
   flex-direction: column;
   padding: 8px;
   margin-bottom: 8px;
-  border: 1px solid lightgrey;
+  border: 1px solid
+    ${({ theme, isExpired }) => (isExpired ? theme.colors.error : theme.colors.border)};
   border-radius: 10px;
 
   background-color: ${(props) => {
@@ -102,6 +104,7 @@ const Task = (props) => {
 
   const dispatch = useDispatch()
   const task = useSelector((state) => selectTaskById(state, taskId))
+  const isExpired = !task.deadline || task.deadline < dayjs().startOf('day').valueOf()
 
   const handleDeleteTask = () => {
     dispatch(deleteTask({ taskId, columnId }))
@@ -138,6 +141,7 @@ const Task = (props) => {
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
             onClick={handleOnClick}
+            isExpired={isExpired}
           >
             {/* <Handle {...provided.dragHandleProps}/> */}
             <TaskTitle>{task.title}</TaskTitle>

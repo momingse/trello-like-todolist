@@ -3,11 +3,13 @@ import { useLocation } from 'react-router-dom'
 import MenuIcon from '@mui/icons-material/Menu'
 import ViewWeekIcon from '@mui/icons-material/ViewWeek'
 import SettingsIcon from '@mui/icons-material/Settings'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { openDrawer } from '../redux/appSlice'
 
 export const HEADER_TITLE = {
+  '/calendar': { title: 'Calendar', icon: <CalendarMonthIcon /> },
   '/todo-state': { title: 'Todo State', icon: <ViewWeekIcon /> },
   '/setting': { title: 'Setting', icon: <SettingsIcon /> }
 }
@@ -36,7 +38,7 @@ const StyledMenuIcon = styled(MenuIcon)`
   cursor: pointer;
 `
 
-const AppHeader =(props) => {
+const AppHeader = (props) => {
   const { pathname } = useLocation()
   const title = HEADER_TITLE[pathname].title
   const dispatch = useDispatch()

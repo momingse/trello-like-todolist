@@ -3,5 +3,6 @@
   "references": [{ "path": "./tsconfig.node.json" }, { "path": "./tsconfig.web.json" }],
   "compilerOptions": {
     "allowJs": true,
+    "jsx": "react-jsx"
   }
 }

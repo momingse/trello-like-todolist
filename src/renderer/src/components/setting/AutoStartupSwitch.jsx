@@ -1,8 +1,7 @@
 import Switch from '@mui/material/Switch'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { styled } from '@mui/material/styles'
 import { withTheme } from 'styled-components'
-import { useDispatch } from 'react-redux'
 import useSnackbar from '../../hooks/useSnackbar'
 
 const AntSwitch = styled(Switch)(({ theme }) => ({
@@ -27,9 +26,6 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
     width: 18,
     height: 18,
     borderRadius: 9
-    // transition: theme.transitions.create(['width'], {
-    //   duration: 200
-    // })
   },
   '& .MuiSwitch-track': {
     borderRadius: 24 / 2,

@@ -42,9 +42,11 @@ const StyledButton = styled(Button)`
     border-radius: 6px;
     padding: 0.2rem 1rem;
     margin: 0 0.5rem;
+    opacity: 0.7;
+
     &:hover,
     &:active {
-      border: 1px solid ${theme.colors.borderActive} !important;
+      opacity: 1;
     }
   `}
 `

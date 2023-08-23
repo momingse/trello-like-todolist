@@ -16,7 +16,8 @@ const theme = {
     primaryBackground: '#0B0C10',
     secondaryBackground: '#1F2833',
     border: '#C5C6C7',
-    borderActive: '#F5F5F5'
+    borderActive: '#151A22',
+    error: '#ff3333'
   }
 }
 

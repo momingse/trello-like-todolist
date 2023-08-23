@@ -26,6 +26,10 @@ const StyledDrawerItem = styled.div`
 
   ${({ isSelected, theme }) => css`
     background-color: ${isSelected ? theme.colors.secondaryBackground : 'inherit'};
+
+    &:hover {
+      background-color: ${theme.colors.borderActive};
+    }
   `}
 `
 

@@ -1,6 +1,5 @@
-import styled, { css } from "styled-components";
-import useScroll from "../hooks/useScroll";
-import { useEffect } from "react";
+import styled, { css } from 'styled-components'
+import useScroll from '../hooks/useScroll'
 
 const ColumnNavigatorContainer = styled.div`
   position: fixed;
@@ -16,7 +15,7 @@ const ColumnNavigatorContainer = styled.div`
       display: none;
     }
   `}
-`;
+`
 
 const ColumnNavigatorItem = styled.div`
   width: 20px;
@@ -28,17 +27,21 @@ const ColumnNavigatorItem = styled.div`
   border-radius: 4px;
   margin-right: 8px;
   cursor: pointer;
-`;
+
+  &:hover {
+    background-color: ${(props) => props.theme.colors.borderActive} !important;
+  }
+`
 
 const ColumnNavigator = (props) => {
-  const { columnOrder, currentColume, handleChangeColumn, el } = props;
-  const [scrollX, setScrollX] = useScroll(el);
-  const childWidth = document.documentElement.clientWidth;
+  const { columnOrder, currentColume, handleChangeColumn, el } = props
+  const [scrollX, setScrollX] = useScroll(el)
+  const childWidth = document.documentElement.clientWidth
 
   const handleOnClick = (index) => {
-    handleChangeColumn(index);
-    setScrollX(index * childWidth);
-  };
+    handleChangeColumn(index)
+    setScrollX(index * childWidth)
+  }
 
   return (
     <ColumnNavigatorContainer>
@@ -50,13 +53,13 @@ const ColumnNavigator = (props) => {
             index={index}
             currentColume={currentColume}
             onClick={() => {
-              handleOnClick(index);
+              handleOnClick(index)
             }}
           />
-        );
+        )
       })}
     </ColumnNavigatorContainer>
-  );
-};
+  )
+}
 
-export default ColumnNavigator;
+export default ColumnNavigator

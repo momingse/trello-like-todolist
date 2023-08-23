@@ -76,6 +76,9 @@ const SettingManager = (props) => {
                 '&.Mui-selected': {
                   backgroundColor: theme.colors.secondaryBackground,
                   color: theme.colors.font
+                },
+                '&:hover': {
+                  backgroundColor: theme.colors.borderActive
                 }
               }}
             />

@@ -65,8 +65,8 @@ const StyledDialog = styled(Dialog)`
 
 const StyledInput = styled(Input)`
   margin-top: 8px;
-  ${({ theme }) => css`
-    border: 1px solid ${theme.colors.border} !important;
+  ${({ theme, error }) => css`
+    border: 1px solid ${error ? theme.colors.error : theme.colors.border} !important;
     border-radius: 6px !important;
 
     input {
@@ -75,7 +75,8 @@ const StyledInput = styled(Input)`
     }
 
     &:hover,
-    &:active {
+    &:active,
+    &:focus-within {
       border: 1px solid ${theme.colors.borderActive} !important;
     }
   `}
@@ -93,7 +94,8 @@ const StyledTextField = styled(TextField)`
     }
 
     &:hover,
-    &:active {
+    &:active,
+    &:focus-within {
       border: 1px solid ${theme.colors.borderActive} !important;
     }
   `}
@@ -103,8 +105,8 @@ const StyledDatePicker = styled(DatePicker)`
   width: calc(100% - 2px);
   padding: 0;
 
-  ${({ theme }) => css`
-    border: 1px solid ${theme.colors.border} !important;
+  ${({ theme, error }) => css`
+    border: 1px solid ${error ? theme.colors.error : theme.colors.border} !important;
     border-radius: 6px !important;
 
     input,
@@ -113,8 +115,13 @@ const StyledDatePicker = styled(DatePicker)`
     }
 
     &:hover,
-    &:active {
+    &:active,
+    &:focus-within {
       border: 1px solid ${theme.colors.borderActive} !important;
+    }
+
+    & .Mui-focused fieldset {
+      border: none;
     }
   `}
 `
@@ -128,11 +135,14 @@ const StyledDialogActions = styled(DialogActions)`
 `
 
 const TaskCreator = (props) => {
+  const initialErrorState = { title: false }
+
   const { columnId, theme } = props
   const [isOpened, setIsOpened] = useState(false)
   const [title, setTitle] = useState('')
   const [deadline, setDeadline] = useState(dayjs())
   const [description, setDescription] = useState('')
+  const [error, setError] = useState({ ...initialErrorState })
   const { snackbar } = useSnackbar()
 
   const dispatch = useDispatch()
@@ -151,9 +161,15 @@ const TaskCreator = (props) => {
   const handleSubmit = () => {
     if (title === '') {
       snackbar({ msg: 'Title cannot be empty', type: 'warning' })
+      setError({
+        title: true
+      })
       return
     }
 
+    setError({
+      ...initialErrorState
+    })
     dispatch(
       addTask({
         title: title,
@@ -219,6 +235,7 @@ const TaskCreator = (props) => {
             sx={{ marginBottom: '16px' }}
             value={title}
             disableUnderline={true}
+            error={error.title}
           />
           <Box sx={{ marginBottom: '16px' }}>
             <span>Deadline</span>
@@ -234,6 +251,9 @@ const TaskCreator = (props) => {
                   slotProps={{
                     layout: {
                       sx: DatePickerLayoutSX
+                    },
+                    textField: {
+                      error: false
                     }
                   }}
                 />

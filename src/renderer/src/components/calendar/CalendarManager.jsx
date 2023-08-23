@@ -1,6 +1,8 @@
 import dayjs from 'dayjs'
-import React from 'react'
+import React, { useState } from 'react'
 import { styled } from 'styled-components'
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 
 const CalendarManagerContainer = styled.div`
   width: calc(100% - 20px);
@@ -11,10 +13,35 @@ const CalendarManagerContainer = styled.div`
 `
 
 const CalendarTitle = styled.div`
+  position: relative;
   padding: 10px;
   text-align: center;
   font-size: 1.2rem;
   font-weight: 600;
+`
+
+const ButtonContainer = styled.div`
+  position: absolute;
+  right: 0;
+  top: 10px;
+
+  svg {
+    opacity: 0.7;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: ${({ theme }) => theme.colors.secondary};
+    border-radius: 4px;
+    margin-left: 5px;
+  }
+
+  svg:hover {
+    opacity: 1;
+  }
+
+  & > svg {
+    color: ${({ theme }) => theme.colors.font};
+    cursor: 'pointer';
+  }
 `
 
 const CalendarContainer = styled.table`
@@ -59,18 +86,14 @@ const CalendarMain = styled.tbody`
 `
 
 const CalendarManager = () => {
-  const MAX_CELL = 35
-  const currentMonth = dayjs().month()
-  const currentYear = dayjs().year()
-  const daysInMonth = dayjs().month(currentMonth).daysInMonth()
-  const daysArray = Array.from({ length: daysInMonth }, (_, index) => index + 1)
+  const MAX_CELL_FOR_FIVE_ROW = 35
+  const MAX_CELL_FOR_SIX_ROW = 42
+  const [currentMonth, setCurrentMonth] = useState(dayjs().month())
+  const [currentYear, setCurrentYear] = useState(dayjs().year())
 
-  const getWeekdayHeaders = () => {
-    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-    return weekdays.map((weekday) => <th key={weekday}>{weekday}</th>)
-  }
-
-  const renderCalendarDays = () => {
+  const renderCalendarDays = (currentYear, currentMonth) => {
+    const daysInMonth = dayjs().month(currentMonth).daysInMonth()
+    const daysArray = Array.from({ length: daysInMonth }, (_, index) => index + 1)
     const firstDayOfMonth = dayjs().year(currentYear).month(currentMonth).startOf('month').day()
     const daysInPrevMonth = dayjs()
       .year(currentYear)
@@ -83,12 +106,19 @@ const CalendarManager = () => {
       return <td key={`prevMon-${index}`}>{day}</td>
     })
 
-    const nextMonthCells =
-      MAX_CELL - daysInMonth - prevMonthCells.length > 0
-        ? Array.from({ length: MAX_CELL - daysInMonth - prevMonthCells.length }, (_, index) => {
-            return <td key={`nextMon-${index}`}>{index + 1}</td>
-          })
-        : []
+    const nextMonthCells = Array.from(
+      {
+        length:
+          (MAX_CELL_FOR_FIVE_ROW - daysInMonth - prevMonthCells.length > 0
+            ? MAX_CELL_FOR_FIVE_ROW
+            : MAX_CELL_FOR_SIX_ROW) -
+          daysInMonth -
+          prevMonthCells.length
+      },
+      (_, index) => {
+        return <td key={`nextMon-${index}`}>{index + 1}</td>
+      }
+    )
 
     const calendarDays = daysArray.map((day) => <td key={day}>{day}</td>)
     const allCells = [...prevMonthCells, ...calendarDays, ...nextMonthCells]
@@ -112,14 +142,35 @@ const CalendarManager = () => {
     return rows.map((row, index) => <tr key={index}>{row}</tr>)
   }
 
+  const getWeekdayHeaders = () => {
+    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    return weekdays.map((weekday) => <th key={weekday}>{weekday}</th>)
+  }
+
+  const handleChangeToNextMonth = () => {
+    const nextMonth = dayjs().month(currentMonth).add(1, 'month').month()
+    setCurrentMonth(nextMonth)
+  }
+
+  const handleChangeToPrevMonth = () => {
+    const prevMonth = dayjs().month(currentMonth).add(1, 'month').month()
+    setCurrentMonth(prevMonth)
+  }
+
   return (
     <CalendarManagerContainer>
-      <CalendarTitle>{dayjs().format('MMMM YYYY')}</CalendarTitle>
+      <CalendarTitle>
+        {dayjs().month(currentMonth).year(currentYear).format('MMMM YYYY')}
+        <ButtonContainer>
+          <KeyboardArrowLeftIcon onClick={handleChangeToPrevMonth} />
+          <KeyboardArrowRightIcon onClick={handleChangeToNextMonth} />
+        </ButtonContainer>
+      </CalendarTitle>
       <CalendarContainer>
         <CalendarHeader>
           <tr>{getWeekdayHeaders()}</tr>
         </CalendarHeader>
-        <CalendarMain>{renderCalendarDays()}</CalendarMain>
+        <CalendarMain>{renderCalendarDays(currentYear, currentMonth)}</CalendarMain>
       </CalendarContainer>
     </CalendarManagerContainer>
   )

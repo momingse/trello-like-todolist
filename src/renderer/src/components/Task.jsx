@@ -91,8 +91,7 @@ const TaskDeadline = styled.div`
 `
 
 const numberToDate = (dateNumber) => {
-  let date = new Date(dateNumber)
-  return date.toLocaleDateString()
+  return dayjs(dateNumber).format('L')
 }
 
 const Task = (props) => {

@@ -54,7 +54,7 @@ const NavigatorContainer = styled.div`
 const TodoManager = () => {
   const [homeIndex, setHomeIndex] = useState(null)
   const [currentColume, setCurrentColume] = useState(0)
-  const [windowWidth, windowHeight] = useWindowSize()
+  const [windowWidth, windowHeight] = useWindowSize(window)
 
   const dispatch = useDispatch()
   const columnOrder = useSelector(selectColumnOrder)

@@ -1,5 +1,6 @@
 import { createSlice, isAnyOf, nanoid, createSelector } from '@reduxjs/toolkit'
 import { createListenerMiddleware } from '@reduxjs/toolkit'
+import dayjs from 'dayjs'
 
 const template = {
   tasks: {
@@ -247,6 +248,7 @@ toDoListenerMiddleware.startListening({
 })
 
 const selectTodoState = (state) => state.todo
+const selectTodoTasks = (state) => state.todo.tasks
 
 export const selectColumnOrder = (state) => state.todo.columnOrder
 export const selectColumnById = (state, columnId) => state.todo.columns[columnId]
@@ -256,3 +258,23 @@ export const selectTodo = createSelector(selectTodoState, (todo) => ({
   tasks: todo.tasks,
   columns: todo.columns
 }))
+export const selectTaskByMonth = createSelector(
+  [selectTodoTasks, (_, currentMonth, currentYear) => [currentMonth, currentYear]],
+  (tasks, [targetMonth, targetYear]) => {
+    return Object.values(tasks).filter((task, index) => {
+      const checkMonthMatch = (deadline, targetMonth) => {
+        const taskDeadlineMonth = dayjs(deadline).month()
+        return (
+          taskDeadlineMonth === targetMonth ||
+          taskDeadlineMonth === (targetMonth + 1) % 12 ||
+          taskDeadlineMonth === (taskDeadlineMonth + 11) % 12
+        )
+      }
+
+      const monthMatch = checkMonthMatch(task.deadline, targetMonth, targetYear)
+      const yearMatch = dayjs(task.deadline).year() === targetYear
+
+      return monthMatch && yearMatch
+    })
+  }
+)
